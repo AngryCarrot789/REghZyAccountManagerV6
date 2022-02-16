@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="REghZyAccountManagerV6.Accounting.Controls.DoubleClickEditableBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:REghZyAccountManagerV6.Accounting.Controls" 
+             xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Accounting" 
+             d:DataContext="{d:DesignInstance Type=accounting:ExtraData}"
+             mc:Ignorable="d" 
+             d:DesignHeight="30" d:DesignWidth="400"
+             Background="Transparent">
+    <Grid>
+        <Button Content="Copy" Command="{Binding CopyToClipboard, Mode=OneTime}" HorizontalAlignment="Right" Width="55"/>
+        <Grid Margin="0,0,60,0">
+            <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
+                HorizontalContentAlignment="Stretch" 
+                HorizontalAlignment="Stretch" Margin="-4,-1"
+                VerticalContentAlignment="Center" Padding="4 2"
+                x:Name="Editor" LostFocus="Editor_LostFocus"
+                Visibility="Collapsed"
+                AcceptsReturn="True"
+                AcceptsTab="False"
+                TextWrapping="Wrap" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
+                KeyDown="Editor_KeyDown"/>
+            <TextBlock Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
+                HorizontalAlignment="Stretch" Margin="-1,0,0,0"
+                VerticalAlignment="Center"
+                Background="Transparent" 
+                Padding="4 2"
+                x:Name="Preview"
+                Visibility="Visible"
+                TextWrapping="Wrap"/>
+        </Grid>
+    </Grid>
+</UserControl>

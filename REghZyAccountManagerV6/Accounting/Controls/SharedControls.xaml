@@ -1,0 +1,22 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ContextMenu x:Key="AccountContextMenu" x:Shared="true" DataContext="{Binding}">
+        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an"/>
+        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e"/>
+        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u"/>
+        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p"/>
+        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob"/>
+        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si"/>
+    </ContextMenu>
+
+    <ContextMenu x:Key="DeletableAccountContextMenu" x:Shared="true" DataContext="{Binding}">
+        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an"/>
+        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e"/>
+        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u"/>
+        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p"/>
+        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob"/>
+        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si"/>
+        <Separator Style="{DynamicResource MenuItemSeparator}"/>
+        <MenuItem Header="Delete" Command="{Binding DeleteCommand, Mode=OneTime}" BorderBrush="#FFDC1E1E" BorderThickness="1"/>
+    </ContextMenu>
+</ResourceDictionary>
