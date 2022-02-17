@@ -4,6 +4,10 @@ using System.Xml.Serialization;
 
 namespace REghZyAccountManagerV6.Accounting {
     public class AccountModel {
+        // Not using XML anymore, because it's very dodgy
+        // keeping the XML attributes just incase i add it back some day...
+        // and so that i remember how to actually use XML serialisation :-)
+
         [XmlIgnore]
         public string FilePath { get; set; }
 

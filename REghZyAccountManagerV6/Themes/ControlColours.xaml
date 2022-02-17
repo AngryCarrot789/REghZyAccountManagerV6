@@ -16,12 +16,12 @@
     <SolidColorBrush x:Key="Button.Static.Foreground"                    Color="{DynamicResource AREghZyColour.Foreground.Static}"/>
     <SolidColorBrush x:Key="Button.Disabled.Foreground"                  Color="{DynamicResource AREghZyColour.Foreground.Disabled}"/>
     <SolidColorBrush x:Key="Button.Defaulted.Border"                     Color="{DynamicResource AREghZyColour.Primary.2.Border.Static}"/>
-    <SolidColorBrush x:Key="ToggleButton.IsChecked.Background"           Color="{DynamicResource AREghZyColour.Primary.4.Border.Selected}"/>
+    <SolidColorBrush x:Key="ToggleButton.IsChecked.Background"           Color="{DynamicResource AREghZyColour.Primary.2.Border.Selected}"/>
     <SolidColorBrush x:Key="ToggleButton.IsChecked.Border"               Color="{DynamicResource AREghZyColour.Primary.2.Border.Selected}"/>
-    <SolidColorBrush x:Key="ToggleButton.Pressed.IsChecked.Background"   Color="{DynamicResource AREghZyColour.Primary.4.Border.Selected}"/>
-    <SolidColorBrush x:Key="ToggleButton.Pressed.IsChecked.Border"       Color="{DynamicResource AREghZyColour.Primary.4.Border.Selected}"/>
-    <SolidColorBrush x:Key="ToggleButton.MouseOver.IsChecked.Background" Color="{DynamicResource AREghZyColour.Primary.2.Border.Selected}"/>
-    <SolidColorBrush x:Key="ToggleButton.MouseOver.IsChecked.Border"     Color="{DynamicResource AREghZyColour.Primary.2.Border.Selected}"/>
+    <SolidColorBrush x:Key="ToggleButton.Pressed.IsChecked.Background"   Color="{DynamicResource AREghZyColour.Primary.3.Border.Selected}"/>
+    <SolidColorBrush x:Key="ToggleButton.Pressed.IsChecked.Border"       Color="{DynamicResource AREghZyColour.Primary.3.Border.Selected}"/>
+    <SolidColorBrush x:Key="ToggleButton.MouseOver.IsChecked.Background" Color="{DynamicResource AREghZyColour.Primary.4.Border.Selected}"/>
+    <SolidColorBrush x:Key="ToggleButton.MouseOver.IsChecked.Border"     Color="{DynamicResource AREghZyColour.Primary.4.Border.Selected}"/>
 
     <SolidColorBrush x:Key="ComboBox.Static.Background"                    Color="{DynamicResource AREghZyColour.Primary.1.Background.Static}"/>
     <SolidColorBrush x:Key="ComboBox.Static.Border"                        Color="{DynamicResource AREghZyColour.Primary.1.Border.Static}"/>

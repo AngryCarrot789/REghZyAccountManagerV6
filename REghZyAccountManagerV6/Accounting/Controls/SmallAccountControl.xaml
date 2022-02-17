@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:REghZyAccountManagerV6.Accounting.Controls" 
-             xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Accounting" 
+             xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Accounting" xmlns:controls="clr-namespace:REghZyAccountManagerV6.Controls"
              d:DataContext="{d:DesignInstance Type=accounting:AccountViewModel}"
              Background="Transparent"
              mc:Ignorable="d"
@@ -25,9 +25,18 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <TextBlock Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_ACCNAME}"
-                   VerticalAlignment="Top" Margin="2,0" FontSize="14" FontWeight="Bold"/>
+        
+        <!--
+        
+                <TextBlock Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_ACCNAME}"
+                   VerticalAlignment="Top" Margin="2,0" FontSize="14" FontWeight="Bold"
+                   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+        -->
+        
+        <controls:DoubleClickEditBox Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_ACCNAME}"
+                                     VerticalAlignment="Top" Margin="-5,-2,-5,0" FontSize="14" FontWeight="Bold"/>
         <TextBlock Text="{Binding Email, FallbackValue=BINDING_ERROR_EMAIL, UpdateSourceTrigger=PropertyChanged}"
-                   FontSize="11" VerticalAlignment="Bottom" Margin="3,0,4,1"/>
+                   FontSize="11" VerticalAlignment="Bottom" Margin="3,0,4,1"
+                   TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
     </Grid>
 </UserControl>

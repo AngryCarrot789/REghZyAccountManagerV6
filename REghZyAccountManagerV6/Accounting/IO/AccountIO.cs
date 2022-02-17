@@ -8,10 +8,10 @@ using REghZyAccountManagerV6.Utils;
 
 namespace REghZyAccountManagerV6.Accounting.IO {
     public class AccountIO {
-
-        public const string FILE_EXTENSION = "rzdat";
-        public const string FILE_EXTENSION_DOT = ".rzdat";
-        public const string FILE_EXTENSION_FILTER = "*.rzdat";
+        public const string PREAMBLE = "ThisIsAnActualAccount";
+        public const string FILE_EXTENSION = "txt";
+        public const string FILE_EXTENSION_DOT = ".txt";
+        public const string FILE_EXTENSION_FILTER = "*.txt";
 
         public XmlSerializer XmlSerializer { get; }
         public string Directory { get; set; }
@@ -64,6 +64,7 @@ namespace REghZyAccountManagerV6.Accounting.IO {
                 }
                 catch (Exception e) {
                     errorHandler(path, e);
+                    item = null;
                 }
 
                 if (item == null) {
@@ -101,6 +102,7 @@ namespace REghZyAccountManagerV6.Accounting.IO {
         }
 
         public static void WriteAccountToWriter(AccountModel account, TextWriter writer) {
+            writer.WriteLine(PREAMBLE);
             writer.WriteLine(account.Position);
             writer.WriteLine(account.AccountName);
             writer.WriteLine(account.Email);
@@ -113,14 +115,25 @@ namespace REghZyAccountManagerV6.Accounting.IO {
             }
         }
 
-
-        public static void ReadAccountFromReader(out AccountViewModel account, TextReader reader) {
+        public static void ReadAccountFromReader(out AccountViewModel account, TextReader reader, bool readPreamble) {
             AccountModel model = new AccountModel();
             ReadAccountFromReader(ref model, reader);
             account = model.ToViewModel();
         }
 
-        public static void ReadAccountFromReader(ref AccountModel account, TextReader reader) {
+        public static void ReadAccountFromReader(ref AccountModel account, TextReader reader, bool readPreamble = true) {
+            // ReadLine() returns null if there's no more data. It returns an empty
+            // string if there is more data, but the line is just empty
+            if (readPreamble) {
+                string preamble = reader.ReadLine();
+                if (preamble == null) {
+                    throw new EndOfStreamException("Not enough data to read preamble");
+                }
+                else if (preamble != PREAMBLE) {
+                    throw new Exception("Preamble was invalid (it was '{preamble}')");
+                }
+            }
+
             account.Position = int.TryParse(reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read account position"), out int pos) ? pos : 0;
             account.AccountName = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read account name");
             account.Email = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read email");

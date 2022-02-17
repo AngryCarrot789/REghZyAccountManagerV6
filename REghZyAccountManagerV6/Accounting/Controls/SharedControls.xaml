@@ -17,7 +17,7 @@
         <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" ToolTip="Copies the Date of Birth to your computer's clipboard"/>
         <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" ToolTip="Copies the Security Info to your computer's clipboard"/>
         <Separator Style="{DynamicResource MenuItemSeparator}"/>
-        <MenuItem Header="Remove/Delete" Command="{Binding DeleteCommand, Mode=OneTime}" BorderBrush="#FFDC1E1E" BorderThickness="1" ToolTip="Removes this account from the account list" Background="#FF851414"/>
+        <MenuItem Header="Delete" Command="{Binding DeleteCommand, Mode=OneTime}" BorderBrush="#FFDC1E1E" BorderThickness="1" ToolTip="Deletes this account from the account list, and also deletes the file. This action is undoable with the undo button in the account panel" Background="#FF851414"/>
     </ContextMenu>
 
     <ContextMenu x:Key="ExtraDataContextMenu" x:Shared="true">

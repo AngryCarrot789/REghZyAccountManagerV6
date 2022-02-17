@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:REghZyAccountManagerV6.Accounting.Controls" 
              xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Accounting"
              xmlns:converters="clr-namespace:REghZy.MVVM.Framework.Converters;assembly=REghZy.MVVM.Framework" 
-             xmlns:converters1="clr-namespace:REghZyAccountManagerV6.Converters"
+             xmlns:converters1="clr-namespace:REghZyAccountManagerV6.Converters" xmlns:controls="clr-namespace:REghZyAccountManagerV6.Controls"
              d:DataContext="{d:DesignInstance Type=accounting:AccountViewModel}"
              Background="Transparent"
              mc:Ignorable="d"
@@ -33,9 +33,9 @@
                 </LinearGradientBrush>
             </Border.Background>
         </Border>
-        <TextBlock Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_ACCNAME}" VerticalAlignment="Top" FontSize="21" FontWeight="Bold" Margin="10,7,375,0"/>
-        <TextBlock Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_EMAIL}" VerticalAlignment="Bottom" FontSize="15" Margin="10,0,375,7"/>
-        <Grid Margin="0,10,10,10" HorizontalAlignment="Right" Width="360">
+        <controls:DoubleClickEditBox Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_ACCNAME}" VerticalAlignment="Top" FontSize="21" FontWeight="Bold" Margin="9,4,376,0"/>
+        <TextBlock Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_EMAIL}" VerticalAlignment="Bottom" FontSize="15" Margin="16,0,369,7"/>
+        <Grid Margin="0,10,10,10" HorizontalAlignment="Right" Width="354">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="1*"/>
@@ -45,12 +45,28 @@
             <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="u" Content="Copy Username" Grid.Column="1" Margin="3,0,2,0"/>
             <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="p" Content="Copy Password" Grid.Column="2" Margin="3,0,0,0"/>
         </Grid>
-        <Rectangle Width="8" HorizontalAlignment="Left" StrokeThickness="4"
-                   StrokeDashArray="0.25 2" StrokeDashOffset="1" StrokeDashCap="Square" 
-                   Stroke="{DynamicResource AREghZyBrush.Primary.3.Border.Static}"
+        <Rectangle Margin="1,3,0,3"
+                   Opacity="0.6"
+                   Visibility="Visible"
+                   Width="7" 
+                   HorizontalAlignment="Left"
                    MouseMove="Rectangle_MouseMove"
                    MouseDown="Rectangle_MouseDown"
                    MouseUp="Rectangle_MouseUp"
-                   Visibility="Collapsed"/>
+                   MouseLeave="Rectangle_MouseLeave"
+                   ToolTip="Use this grip to drag-drop the file somewhere on your PC"
+                   Cursor="Hand">
+            <Rectangle.Fill>
+                <DrawingBrush TileMode="Tile" Viewbox="0,0,4,4" Viewport="0,0,4,4" ViewportUnits="Absolute" ViewboxUnits="Absolute">
+                    <DrawingBrush.Drawing>
+                        <DrawingGroup>
+                            <GeometryDrawing Brush="{DynamicResource AREghZyBrush.Primary.2.Background.Static}" Geometry="M 1 1 L 1 3 L 3 3 L 3 1 z"/>
+                            <GeometryDrawing Brush="{DynamicResource AREghZyBrush.Primary.3.Background.Static}" Geometry="M 0 0 L 0 2 L 2 2 L 2 0 z"/>
+                        </DrawingGroup>
+                    </DrawingBrush.Drawing>
+                </DrawingBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
     </Grid>
 </UserControl>

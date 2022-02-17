@@ -70,8 +70,15 @@ namespace REghZyAccountManagerV6.ViewModels {
         }
 
         public void AddNewAccount(AccountViewModel account) {
+            AddNewAccount(account, true);
+        }
+
+        public void AddNewAccount(AccountViewModel account, bool select) {
             this.Accounts.Add(account);
-            this.SelectedAccount = account;
+
+            if (select) {
+                this.SelectedAccount = account;
+            }
         }
 
         public void DeleteSelectedAccount() {

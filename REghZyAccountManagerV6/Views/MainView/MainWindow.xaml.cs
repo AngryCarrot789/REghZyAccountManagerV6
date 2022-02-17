@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.Accounting.IO;
+using REghZyAccountManagerV6.ViewModels;
 using REghZyAccountManagerV6.Views.NewAccounts;
 
 namespace REghZyAccountManagerV6.Views.MainView {
@@ -87,12 +90,13 @@ namespace REghZyAccountManagerV6.Views.MainView {
         }
 
         private void DoEditorAnimation(double from, double to) {
-            DoubleAnimation animation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(150)) {
-                AccelerationRatio = 0.05,
-                DecelerationRatio = 0.95
-            };
+            // DoubleAnimation animation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(150)) {
+            //     AccelerationRatio = 0.05,
+            //     DecelerationRatio = 0.95
+            // };
 
-            this.EditorView.BeginAnimation(WidthProperty, animation);
+            this.EditorColumn.Width = new GridLength(to);
+            // this.EditorColumn.BeginAnimation(WidthProperty, animation);
         }
 
         private class EditorViewWrapper : IAccountEditor {
@@ -131,6 +135,61 @@ namespace REghZyAccountManagerV6.Views.MainView {
             public void FocusInput() {
                 this.window.FindInputBox.Focus();
                 this.window.FindInputBox.SelectAll();
+            }
+        }
+
+        private List<AccountModel> accounts;
+        private void ListBox_DragEnter(object sender, DragEventArgs e) {
+            if (e.Data.GetData(DataFormats.FileDrop) is string[] paths) {
+                this.accounts = new List<AccountModel>(paths.Length);
+                foreach(string path in paths) {
+                    // if it doesn't exist, or is bigger than 64K, then ignore it
+                    if (!File.Exists(path) || new FileInfo(path).Length > 65535) {
+                        continue;
+                    }
+
+                    try {
+                        AccountModel model = new AccountModel();
+                        using (FileStream stream = File.OpenRead(path)) {
+                            // inefficient reading, but only for the preamble
+                            StreamReader reader = new StreamReader(stream);
+                            string preamble = reader.ReadLine();
+                            if (preamble == null || preamble != AccountIO.PREAMBLE) {
+                                continue;
+                            }
+
+                            // switch to buffered reading to read blocks of memory
+                            reader = new StreamReader(new BufferedStream(stream, 1024));
+
+                            try {
+                                AccountIO.ReadAccountFromReader(ref model, reader, false);
+                            }
+                            catch(Exception fail) { // may not be a valid account file, so ignore it
+                                continue;
+                            }
+
+                            this.accounts.Add(model);
+                        }
+                    }
+                    catch(Exception ee) {
+                        MessageBox.Show($"Failed to read file at path '{path}'. Reason: {ee.Message}", "Error reading file");
+                    }
+                }
+            }
+        }
+
+        private void ListBox_DragLeave(object sender, DragEventArgs e) {
+            this.accounts = null;
+        }
+
+        private void ListBox_Drop(object sender, DragEventArgs e) {
+            if (this.accounts != null) {
+                AccountCollectionViewModel vm = ViewModelLocator.AccountCollection;
+                foreach (AccountModel account in this.accounts) {
+                    vm.AddNewAccount(account.ToViewModel(), false);
+                }
+
+                this.accounts = null;
             }
         }
     }

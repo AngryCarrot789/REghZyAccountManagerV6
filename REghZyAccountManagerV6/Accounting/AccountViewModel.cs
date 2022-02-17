@@ -89,11 +89,11 @@ namespace REghZyAccountManagerV6.Accounting {
 
         }
 
-        public AccountViewModel(IEnumerable<string> list) : this(list.Select(d => new ExtraData(d))) {
+        public AccountViewModel(IEnumerable<string> list) : this(list == null ? new List<ExtraData>() : list.Select(d => new ExtraData(d))) {
 
         }
 
-        public AccountViewModel(string filePath, string accountName, string email, string username, string password, string dateOfBirth, string securityInfo, IEnumerable<string> extraData) : this(extraData) {
+        public AccountViewModel(string filePath, string accountName, string email, string username, string password, string dateOfBirth, string securityInfo, IEnumerable<string> extraData) : this(extraData ?? new List<string>()) {
             this.filePath = filePath;
             this.accountName = accountName;
             this.email = email;

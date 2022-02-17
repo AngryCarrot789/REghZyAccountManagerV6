@@ -74,7 +74,7 @@ namespace REghZyAccountManagerV6.Utils {
             args.Handled = true;
         }
 
-        private static T FindDescendant<T>(this DependencyObject d) where T : DependencyObject {
+        public static T FindDescendant<T>(this DependencyObject d) where T : DependencyObject {
             if (d == null) {
                 return null;
             }
