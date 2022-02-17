@@ -79,6 +79,7 @@ namespace REghZyAccountManagerV6.Finding {
             this.FoundAccounts = new ObservableCollection<AccountViewModel>();
             this.DoSearchCommand = new RelayCommand(DoSearch);
             this.ClearResultsCommand = new RelayCommand(this.FoundAccounts.Clear);
+            this.SearchAccountName = true;
 
             this.SelectAllCommand = new RelayCommand(() => {
                 SearchAccountName = true;

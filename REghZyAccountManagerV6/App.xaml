@@ -8,7 +8,7 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes/Dark_DarkBackLightBorder.xaml"/>
+                <ResourceDictionary Source="Themes/SoftDark.xaml"/>
                 <ResourceDictionary Source="Themes/ControlColours.xaml"/>
                 <ResourceDictionary Source="Themes/Controls.xaml"/>
                 <ResourceDictionary Source="Accounting/Controls/SharedControls.xaml" />

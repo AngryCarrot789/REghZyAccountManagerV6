@@ -23,7 +23,7 @@ namespace REghZyAccountManagerV6.Accounting.Controls {
                     this.Preview.Visibility = Visibility.Collapsed;
                     this.Editor.Visibility = Visibility.Visible;
                     this.Editor.Focus();
-                    // this.Editor.SelectAll();
+                    this.Editor.SelectAll();
                 }
                 else {
                     this.Focus();
@@ -39,6 +39,10 @@ namespace REghZyAccountManagerV6.Accounting.Controls {
 
         protected override void OnPreviewMouseDoubleClick(MouseButtonEventArgs e) {
             base.OnPreviewMouseDoubleClick(e);
+            if (e.ChangedButton != MouseButton.Left) {
+                return;
+            }
+
             if (this.EditMode) {
                 return;
             }
@@ -60,20 +64,20 @@ namespace REghZyAccountManagerV6.Accounting.Controls {
         private bool lastKeyWasEnter;
 
         private void Editor_KeyDown(object sender, KeyEventArgs e) {
-            if (e.Key == Key.Enter) {
-                if (this.lastKeyWasEnter) {
-                    this.lastKeyWasEnter = false;
-                    // SplitInto2();
-                }
-                else {
-                    this.lastKeyWasEnter = true;
-                }
-            }
-            else {
-                if (e.Key == Key.Escape) {
-                    this.EditMode = false;
-                }
-            }
+            // if (e.Key == Key.Enter) {
+            //     if (this.lastKeyWasEnter) {
+            //         this.lastKeyWasEnter = false;
+            //         // SplitInto2();
+            //     }
+            //     else {
+            //         this.lastKeyWasEnter = true;
+            //     }
+            // }
+            // else {
+            //     if (e.Key == Key.Escape) {
+            //         this.EditMode = false;
+            //     }
+            // }
         }
 
         private void SplitInto2() {

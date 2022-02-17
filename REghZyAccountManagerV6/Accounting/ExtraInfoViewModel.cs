@@ -63,12 +63,17 @@ namespace REghZyAccountManagerV6.Accounting {
             this.SelectedItem = selected;
         }
 
+        public bool RemoveItem(ExtraData extraData) {
+            return this.ExtraInformation.Remove(extraData);
+        }
+
         private void AddItem() {
             if (string.IsNullOrWhiteSpace(this.toAdd)) {
                 return;
             }
 
             AddItem(new ExtraData(this.toAdd, this));
+            this.ToAdd = "";
         }
 
         private void AddItem(ExtraData data) {

@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Shapes;
 using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.Accounting.IO;
 using REghZyAccountManagerV6.Views.NewAccounts;
@@ -17,16 +14,33 @@ namespace REghZyAccountManagerV6.Views.MainView {
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
+        public static string PATH = "C:\\Users\\kettl\\Documents\\IISExtended\\0x0000004TEMP\\NULL_ACCESS\\v6";
+
         private bool isEditorOpen;
         private const double EDITOR_WIDTH_CLOSE = 0;
         private const double EDITOR_WIDTH_OPEN = 350;
 
         public MainWindow() {
             InitializeComponent();
+            this.isEditorOpen = true;
+
+            ServiceLocator.InitCTOR();
             ServiceLocator.Editor = new EditorViewWrapper(this);
+            ServiceLocator.FindView = new FindViewWrapper(this);
             ServiceLocator.NewAccount = new NewAccountWindow();
-            ViewModelLocator.AccountPanel.IsEditorOpen = this.isEditorOpen = true;
-            ServiceLocator.AccountIO = new AccountIO("C:\\Users\\kettl\\Desktop\\ElloThere");
+
+            ViewModelLocator.InitCTOR();
+            ViewModelLocator.AccountPanel.IsEditorOpen = false;
+
+            // ViewModelLocator.Application.OnConfigLoaded += this.Application_OnConfigLoaded;
+            // ViewModelLocator.Application.LoadFromDisk();
+
+            // string directory = ViewModelLocator.Application.UserSettings.SaveDirectory;
+            // if (string.IsNullOrEmpty(directory)) {
+            //    directory = PATH;
+            // }
+
+            ServiceLocator.AccountIO = new AccountIO(PATH);
 
             ObservableCollection<AccountViewModel> accounts = ViewModelLocator.AccountCollection.Accounts;
             IEnumerable<AccountModel> enumerable = ServiceLocator.AccountIO.ReadAccountsFromDisk((path, exception) => {
@@ -44,6 +58,15 @@ namespace REghZyAccountManagerV6.Views.MainView {
             // ellipse.Fill = new SolidColorBrush(Colors.Orange);
             // window.Content = ellipse;
             // window.ShowDialog();
+        }
+
+        private void Application_OnConfigLoaded(Settings.UserSettingsViewModel settings) {
+            string directory = ViewModelLocator.Application.UserSettings.SaveDirectory;
+            if (string.IsNullOrEmpty(directory)) {
+                directory = PATH;
+            }
+
+            ServiceLocator.AccountIO.Directory = directory;
         }
 
         protected override void OnClosing(CancelEventArgs e) {
@@ -95,6 +118,19 @@ namespace REghZyAccountManagerV6.Views.MainView {
 
                 this.window.DoEditorAnimation(EDITOR_WIDTH_CLOSE, EDITOR_WIDTH_OPEN);
                 this.window.isEditorOpen = true;
+            }
+        }
+
+        private class FindViewWrapper : IFindView {
+            private readonly MainWindow window;
+
+            public FindViewWrapper(MainWindow window) {
+                this.window = window;
+            }
+
+            public void FocusInput() {
+                this.window.FindInputBox.Focus();
+                this.window.FindInputBox.SelectAll();
             }
         }
     }

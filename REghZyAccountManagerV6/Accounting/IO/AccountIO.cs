@@ -14,7 +14,7 @@ namespace REghZyAccountManagerV6.Accounting.IO {
         public const string FILE_EXTENSION_FILTER = "*.rzdat";
 
         public XmlSerializer XmlSerializer { get; }
-        public string Directory { get; }
+        public string Directory { get; set; }
 
         public AccountIO(string directory) {
             this.Directory = directory;
@@ -49,7 +49,6 @@ namespace REghZyAccountManagerV6.Accounting.IO {
         }
 
         public IEnumerable<AccountModel> ReadAccountsFromDisk(Action<string, Exception> errorHandler) {
-            XmlSerializer deserialiser = this.XmlSerializer;
             foreach (string path in System.IO.Directory.EnumerateFiles(this.Directory, FILE_EXTENSION_FILTER)) {
                 AccountModel item = new AccountModel();
                 try {
@@ -60,21 +59,7 @@ namespace REghZyAccountManagerV6.Accounting.IO {
 
                     // Mine
                     using (StreamReader reader = new StreamReader(new BufferedStream(File.OpenRead(path), 256))) {
-                        item.Position = int.TryParse(reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read account position"), out int pos) ? pos : 0;
-                        item.AccountName = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read account name");
-                        item.Email = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read email");
-                        item.Username = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read username");
-                        item.Password = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read password");
-                        item.DateOfBirth = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read date of birth");
-                        item.SecurityInfo = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read security info");
-                        List<string> data = new List<string>();
-                        string line = reader.ReadLine();
-                        while (!string.IsNullOrWhiteSpace(line)) {
-                            data.Add(line);
-                            line = reader.ReadLine();
-                        }
-
-                        item.Data = data;
+                        ReadAccountFromReader(ref item, reader);
                     }
                 }
                 catch (Exception e) {
@@ -102,16 +87,7 @@ namespace REghZyAccountManagerV6.Accounting.IO {
 
                     // Mine
                     using (StreamWriter writer = new StreamWriter(new BufferedStream(File.OpenWrite(path), 1024))) {
-                        writer.WriteLine(item.Position);
-                        writer.WriteLine(item.AccountName);
-                        writer.WriteLine(item.Email);
-                        writer.WriteLine(item.Username);
-                        writer.WriteLine(item.Password);
-                        writer.WriteLine(item.DateOfBirth);
-                        writer.WriteLine(item.SecurityInfo);
-                        foreach (string line in item.Data) {
-                            writer.WriteLine(line);
-                        }
+                        WriteAccountToWriter(item, writer);
                     }
                 }
                 catch (Exception e) {
@@ -120,12 +96,46 @@ namespace REghZyAccountManagerV6.Accounting.IO {
             }
         }
 
-        public void SaveAccountXML(AccountViewModel account, int index) {
-            AccountModel item = new AccountModel(account);
-            string path = GetAccountPath(item.AccountName, item.FilePath);
-            using (BufferedStream stream = new BufferedStream(File.OpenWrite(path), 1024)) {
-                this.XmlSerializer.Serialize(stream, item);
+        public static void WriteAccountToWriter(AccountViewModel account, TextWriter stream) {
+            WriteAccountToWriter(new AccountModel(account), stream);
+        }
+
+        public static void WriteAccountToWriter(AccountModel account, TextWriter writer) {
+            writer.WriteLine(account.Position);
+            writer.WriteLine(account.AccountName);
+            writer.WriteLine(account.Email);
+            writer.WriteLine(account.Username);
+            writer.WriteLine(account.Password);
+            writer.WriteLine(account.DateOfBirth);
+            writer.WriteLine(account.SecurityInfo);
+            foreach (string line in account.Data) {
+                writer.WriteLine(line);
             }
+        }
+
+
+        public static void ReadAccountFromReader(out AccountViewModel account, TextReader reader) {
+            AccountModel model = new AccountModel();
+            ReadAccountFromReader(ref model, reader);
+            account = model.ToViewModel();
+        }
+
+        public static void ReadAccountFromReader(ref AccountModel account, TextReader reader) {
+            account.Position = int.TryParse(reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read account position"), out int pos) ? pos : 0;
+            account.AccountName = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read account name");
+            account.Email = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read email");
+            account.Username = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read username");
+            account.Password = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read password");
+            account.DateOfBirth = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read date of birth");
+            account.SecurityInfo = reader.ReadLine() ?? throw new EndOfStreamException("Not enough data to read security info");
+            List<string> data = new List<string>();
+            string line = reader.ReadLine();
+            while (!string.IsNullOrWhiteSpace(line)) {
+                data.Add(line);
+                line = reader.ReadLine();
+            }
+
+            account.Data = data;
         }
     }
 }

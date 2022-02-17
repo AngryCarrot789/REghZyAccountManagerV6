@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:REghZyAccountManagerV6.Accounting.Controls" 
              xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Accounting" 
              d:DataContext="{d:DesignInstance Type=accounting:AccountViewModel}"
+             Background="Transparent"
              mc:Ignorable="d"
              d:DesignWidth="200"
              Height="35" >

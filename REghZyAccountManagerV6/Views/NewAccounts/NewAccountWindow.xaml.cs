@@ -27,7 +27,45 @@ namespace REghZyAccountManagerV6.Views.NewAccounts {
             this.confirmed = false;
             this.Model = new AccountViewModel();
             this.Model.AccountName = "New Account";
+            this.selectionIndex = 0;
+            SelectNext();
             this.ShowDialog();
+        }
+
+        private int selectionIndex = 0;
+
+        private void SelectNext() {
+            if (this.selectionIndex == 0) {
+                this.BoxAccountName.Focus();
+                this.BoxAccountName.SelectAll();
+            }
+            else if (this.selectionIndex == 1) {
+                this.BoxEmail.Focus();
+                this.BoxEmail.SelectAll();
+            }
+            else if (this.selectionIndex == 2) {
+                this.BoxUsername.Focus();
+                this.BoxUsername.SelectAll();
+            }
+            else if (this.selectionIndex == 3) {
+                this.BoxPassword.Focus();
+                this.BoxPassword.SelectAll();
+            }
+            else if (this.selectionIndex == 4) {
+                this.BoxDOB.Focus();
+                this.BoxDOB.SelectAll();
+            }
+            else if (this.selectionIndex == 5) {
+                this.BoxSecurityInfo.Focus();
+                this.BoxSecurityInfo.SelectAll();
+            }
+            else {
+                this.selectionIndex = 0;
+                SelectNext();
+                return;
+            }
+
+            selectionIndex++;
         }
 
         public void CloseView() {
@@ -42,7 +80,11 @@ namespace REghZyAccountManagerV6.Views.NewAccounts {
         protected override void OnKeyDown(KeyEventArgs e) {
             // base.OnKeyDown(e);
             switch (e.Key) {
-                case Key.Enter: this.confirmed = true; break;
+                case Key.Tab:
+                    SelectNext();
+                    e.Handled = true;
+                    return;
+                case Key.Return: this.confirmed = true; break;
                 case Key.Escape: this.confirmed = false; break;
                 default: return;
             }

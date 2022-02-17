@@ -6,6 +6,7 @@ using REghZyAccountManagerV6.Accounting;
 namespace REghZyAccountManagerV6.Utils {
     public class FileHelper {
         private static char[] INVALID_FILENAME_CHARS_ARR = Path.GetInvalidFileNameChars();
+        private static char[] INVALID_PATH_CHARS_ARR = Path.GetInvalidPathChars();
         private static readonly HashSet<char> INVALID_FILENAME_CHARS;
 
         static FileHelper() {
@@ -36,6 +37,23 @@ namespace REghZyAccountManagerV6.Utils {
             }
 
             return false;
+        }
+
+        public static bool IsPathValid(string path) {
+            if (path.IndexOfAny(INVALID_PATH_CHARS_ARR) == -1) {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static string GetParent(string path) {
+            int index = path.LastIndexOf(Path.DirectorySeparatorChar);
+            if (index == -1) {
+                return path;
+            }
+
+            return path.Substring(0, index);
         }
     }
 }

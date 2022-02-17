@@ -69,12 +69,19 @@ namespace REghZyAccountManagerV6.Accounting {
 
         public ICommand DeleteCommand { get; }
 
+        public ICommand SelectCommand { get; }
+
         public AccountViewModel(IEnumerable<ExtraData> extraInfo) {
             this.ExtraInfo = new ExtraInfoViewModel(this, extraInfo);
             this.CopyToClipboardCommand = new RelayCommandParam<string>(CopyClipboardData);
             this.PasteFromClipboardCommand = new RelayCommandParam<string>(PasteToClipboard);
             this.DeleteCommand = new RelayCommand(() => {
                 ViewModelLocator.AccountCollection.DeleteAccount(this);
+            });
+
+            this.SelectCommand = new RelayCommand(() => {
+                ViewModelLocator.AccountCollection.SelectedAccount = this;
+                ViewModelLocator.AccountPanel.IsEditorOpen = true;
             });
         }
 

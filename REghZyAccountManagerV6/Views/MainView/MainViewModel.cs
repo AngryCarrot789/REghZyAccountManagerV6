@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Windows.Input;
+using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.ViewModels;
@@ -15,9 +17,15 @@ namespace REghZyAccountManagerV6.Views.MainView {
         /// </summary>
         public AccountCollectionViewModel Collection { get; }
 
+        public ICommand FocusFindCommand { get; }
+
         public MainViewModel() {
             this.Panel = new AccountPanelViewModel();
             this.Collection = new AccountCollectionViewModel();
+
+            this.FocusFindCommand = new RelayCommand(()=> {
+                ServiceLocator.FindView.FocusInput();
+            });
 
             // this.Collection.Accounts.Add(new AccountViewModel(new List<ExtraData> { new ExtraData("hi 1"), new ExtraData("hi 2") }) { AccountName = "My acc name 1", Email = "Google@google.co.uk" });
             // this.Collection.Accounts.Add(new AccountViewModel(new List<ExtraData> { new ExtraData("ello 1111111") }) { AccountName = "ACc 2 lol mi", Email = "No thx@google.co.uk" });

@@ -83,10 +83,15 @@
     <Compile Include="Accounting\ExtraInfoViewModel.cs" />
     <Compile Include="Accounting\IO\AccountIO.cs" />
     <Compile Include="AttachedProperties\SelectAllAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\TextBoxAttachedProperty.cs" />
     <Compile Include="Converters\BoolToStringConverter.cs" />
     <Compile Include="Converters\ModificationColourConverter.cs" />
     <Compile Include="Finding\AccountFinderViewModel.cs" />
     <Compile Include="ServiceLocator.cs" />
+    <Compile Include="Settings\UserSettingsViewModel.cs" />
+    <Compile Include="Settings\UserSettingsWindow.xaml.cs">
+      <DependentUpon>UserSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Themes\Controls.xaml.cs" />
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="Themes\ThemeTypes.cs" />
@@ -96,10 +101,13 @@
     </Compile>
     <Compile Include="Utils\FileHelper.cs" />
     <Compile Include="Utils\LinqTryCatch.cs" />
+    <Compile Include="Utils\HorizontalScrolling.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="ViewModels\AccountCollectionViewModel.cs" />
     <Compile Include="ViewModels\AccountPanelViewModel.cs" />
+    <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="Views\IAccountEditor.cs" />
+    <Compile Include="Views\IFindView.cs" />
     <Compile Include="Views\INewAccount.cs" />
     <Compile Include="Views\IView.cs" />
     <Compile Include="Views\MainView\MainViewModel.cs" />
@@ -117,6 +125,7 @@
     <Page Include="Accounting\Controls\LargeAccountControl.xaml" />
     <Page Include="Accounting\Controls\SharedControls.xaml" />
     <Page Include="Accounting\Controls\SmallAccountControl.xaml" />
+    <Page Include="Settings\UserSettingsWindow.xaml" />
     <Page Include="Themes\ControlColours.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -125,15 +134,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Themes\Dark_DarkBackDarkBorder.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Themes\Dark_DarkBackLightBorder.xaml">
+    <Page Include="Themes\DeepDark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\RedBlackTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\SoftDark.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -175,6 +184,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\addAccountIcon.png" />
+    <Resource Include="Resources\deleteAccountIcon.png" />
+    <Resource Include="Resources\editAccountIcon.png" />
+    <Resource Include="Resources\loadDirectoryIcon.png" />
+    <Resource Include="Resources\saveDirectoryIcon.png" />
+    <Resource Include="Resources\showAccountIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -8,28 +8,29 @@
              d:DataContext="{d:DesignInstance Type=accounting:ExtraData}"
              mc:Ignorable="d" 
              d:DesignHeight="30" d:DesignWidth="400"
-             Background="Transparent">
+             Background="Transparent"
+             ContextMenu="{StaticResource ExtraDataContextMenu}">
     <Grid>
-        <Button Content="Copy" Command="{Binding CopyToClipboard, Mode=OneTime}" HorizontalAlignment="Right" Width="55"/>
-        <Grid Margin="0,0,60,0">
+        <Button Content="Copy" Command="{Binding CopyToClipboard, Mode=OneTime}" HorizontalAlignment="Right" Width="55" Margin="0,0,-3,0"/>
+        <Grid Margin="0,0,57,0">
             <TextBox Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" 
-                HorizontalContentAlignment="Stretch" 
-                HorizontalAlignment="Stretch" Margin="-4,-1"
-                VerticalContentAlignment="Center" Padding="4 2"
-                x:Name="Editor" LostFocus="Editor_LostFocus"
-                Visibility="Collapsed"
-                AcceptsReturn="True"
-                AcceptsTab="False"
-                TextWrapping="Wrap" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
-                KeyDown="Editor_KeyDown"/>
+                     HorizontalContentAlignment="Stretch" 
+                     HorizontalAlignment="Stretch" Margin="-4,-1"
+                     VerticalContentAlignment="Center" Padding="4 2"
+                     x:Name="Editor" LostFocus="Editor_LostFocus"
+                     Visibility="Collapsed"
+                     AcceptsReturn="True"
+                     AcceptsTab="False"
+                     TextWrapping="Wrap" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
+                     KeyDown="Editor_KeyDown"/>
             <TextBlock Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
-                HorizontalAlignment="Stretch" Margin="-1,0,0,0"
-                VerticalAlignment="Center"
-                Background="Transparent" 
-                Padding="4 2"
-                x:Name="Preview"
-                Visibility="Visible"
-                TextWrapping="Wrap"/>
+                       HorizontalAlignment="Stretch" Margin="-1,0,0,0"
+                       VerticalAlignment="Center"
+                       Background="Transparent" 
+                       Padding="4 2"
+                       x:Name="Preview"
+                       Visibility="Visible"
+                       TextWrapping="Wrap"/>
         </Grid>
     </Grid>
 </UserControl>

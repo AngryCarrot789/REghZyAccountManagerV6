@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media.Converters;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
 
@@ -29,6 +30,8 @@ namespace REghZyAccountManagerV6.Accounting {
 
         public ICommand CopyToClipboard { get; }
 
+        public ICommand DeleteItemCommand { get; }
+
         public ExtraInfoViewModel ExtraInfoView { get; set; }
 
         public ExtraData() {
@@ -48,6 +51,10 @@ namespace REghZyAccountManagerV6.Accounting {
                     MessageBox.Show("Failed to set clipboard text: " + e.Message, "Clipboard error");
                 }
             });
+
+            this.DeleteItemCommand = new RelayCommand(() => {
+                Remove();
+            });
         }
 
         public ExtraData(ExtraInfoViewModel extraInfoView) : this() {
@@ -65,6 +72,14 @@ namespace REghZyAccountManagerV6.Accounting {
             this.value = value;
             this.ExtraInfoView = extraInfoView;
             this.c = true;
+        }
+
+        public bool Remove() {
+            if (this.ExtraInfoView != null) {
+                return this.ExtraInfoView.RemoveItem(this);
+            }
+
+            return false;
         }
     }
 }

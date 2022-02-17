@@ -30,6 +30,17 @@ namespace REghZyAccountManagerV6 {
             }
         }
 
+        public static IFindView FindView {
+            get => IoC.GetService<IFindView>();
+            set {
+                if (value == null) {
+                    throw new ArgumentNullException("value", "New find view cannot be set to null");
+                }
+
+                IoC.SetService(value);
+            }
+        }
+
         public static AccountIO AccountIO {
             get => IoC.GetService<AccountIO>();
             set {
@@ -40,5 +51,7 @@ namespace REghZyAccountManagerV6 {
                 IoC.SetService(value);
             }
         }
+
+        public static void InitCTOR() { }
     }
 }

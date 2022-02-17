@@ -21,7 +21,7 @@
     <Color x:Key="AREghZyColour.Deep.1.Border.Static"             R="30" G="30" B="30" A="255"/>
     <Color x:Key="AREghZyColour.Deep.2.Border.Static"             R="34" G="34" B="34" A="255"/>
     <Color x:Key="AREghZyColour.Deep.3.Border.Static"             R="49" G="49" B="49" A="255"/>
-    <Color x:Key="AREghZyColour.Primary.1.Background.Static"      R="29" G="29" B="29" A="255"/>
+    <Color x:Key="AREghZyColour.Primary.1.Background.Static"      R="32" G="32" B="32" A="255"/>
     <Color x:Key="AREghZyColour.Primary.2.Background.Static"      R="37" G="37" B="37" A="255"/>
     <Color x:Key="AREghZyColour.Primary.3.Background.Static"      R="45" G="45" B="45" A="255"/>
     <Color x:Key="AREghZyColour.Primary.4.Background.Static"      R="56" G="56" B="56" A="255"/>

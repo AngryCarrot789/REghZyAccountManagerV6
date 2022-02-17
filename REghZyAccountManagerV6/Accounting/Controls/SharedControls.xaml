@@ -1,22 +1,27 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ContextMenu x:Key="AccountContextMenu" x:Shared="true" DataContext="{Binding}">
-        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an"/>
-        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e"/>
-        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u"/>
-        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p"/>
-        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob"/>
-        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si"/>
+    <ContextMenu x:Key="AccountContextMenu" x:Shared="true">
+        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an" ToolTip="Copies the Account Name to your computer's clipboard"/>
+        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e" ToolTip="Copies the Email to your computer's clipboard"/>
+        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u" ToolTip="Copies the Username to your computer's clipboard"/>
+        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p" ToolTip="Copies the Password to your computer's clipboard"/>
+        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" ToolTip="Copies the Date of Birth to your computer's clipboard"/>
+        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" ToolTip="Copies the Security Info to your computer's clipboard"/>
     </ContextMenu>
 
-    <ContextMenu x:Key="DeletableAccountContextMenu" x:Shared="true" DataContext="{Binding}">
-        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an"/>
-        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e"/>
-        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u"/>
-        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p"/>
-        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob"/>
-        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si"/>
+    <ContextMenu x:Key="DeletableAccountContextMenu" x:Shared="true">
+        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an" ToolTip="Copies the Account Name to your computer's clipboard"/>
+        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e" ToolTip="Copies the Email to your computer's clipboard"/>
+        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u" ToolTip="Copies the Username to your computer's clipboard"/>
+        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p" ToolTip="Copies the Password to your computer's clipboard"/>
+        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" ToolTip="Copies the Date of Birth to your computer's clipboard"/>
+        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" ToolTip="Copies the Security Info to your computer's clipboard"/>
         <Separator Style="{DynamicResource MenuItemSeparator}"/>
-        <MenuItem Header="Delete" Command="{Binding DeleteCommand, Mode=OneTime}" BorderBrush="#FFDC1E1E" BorderThickness="1"/>
+        <MenuItem Header="Remove/Delete" Command="{Binding DeleteCommand, Mode=OneTime}" BorderBrush="#FFDC1E1E" BorderThickness="1" ToolTip="Removes this account from the account list" Background="#FF851414"/>
+    </ContextMenu>
+
+    <ContextMenu x:Key="ExtraDataContextMenu" x:Shared="true">
+        <MenuItem Header="Copy" Command="{Binding CopyToClipboard, Mode=OneTime}" ToolTip="Removes this data from the list"/>
+        <MenuItem Header="Remove/Delete" Command="{Binding DeleteItemCommand, Mode=OneTime}" ToolTip="Removes this data from the list"/>
     </ContextMenu>
 </ResourceDictionary>
