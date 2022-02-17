@@ -8,4 +8,6 @@ so you'll need build the app yourself and change the path (located in MainView.x
 
 ## Preview
 
+I screenshotted this from the XAML designer, which is why it may look a bit pixellated, and is also why all the accounts are the same
+
 ![](devenv_2022-02-17_01.05.27.png)
