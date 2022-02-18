@@ -80,8 +80,10 @@
     <Compile Include="Accounting\ExtraInfoViewModel.cs" />
     <Compile Include="Accounting\IO\AccountIO.cs" />
     <Compile Include="AttachedProperties\GridSplitterAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\PasswordAttachedProperty.cs" />
     <Compile Include="AttachedProperties\SelectAllAttachedProperty.cs" />
-    <Compile Include="AttachedProperties\TextBoxAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\TextHinting.cs" />
+    <Compile Include="Controls\AutoCloseGridSplitter.cs" />
     <Compile Include="Controls\AutoClosingGridSplitter.cs" />
     <Compile Include="Controls\DoubleClickEditBox.xaml.cs">
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
@@ -104,14 +106,22 @@
     <Compile Include="Utils\FileHelper.cs" />
     <Compile Include="Utils\LinqTryCatch.cs" />
     <Compile Include="Utils\HorizontalScrolling.cs" />
+    <Compile Include="Utils\ReaderUtils.cs" />
     <Compile Include="ViewModelLocator.cs" />
     <Compile Include="ViewModels\AccountCollectionViewModel.cs" />
+    <Compile Include="ViewModels\AccountEditorViewModel.cs" />
     <Compile Include="ViewModels\AccountPanelViewModel.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
     <Compile Include="Views\IAccountEditor.cs" />
+    <Compile Include="Views\IAccountList.cs" />
     <Compile Include="Views\IFindView.cs" />
+    <Compile Include="Views\ILoginView.cs" />
     <Compile Include="Views\INewAccount.cs" />
     <Compile Include="Views\IView.cs" />
+    <Compile Include="Views\Login\LoginViewModel.cs" />
+    <Compile Include="Views\Login\LoginWindow.xaml.cs">
+      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\MainView\MainViewModel.cs" />
     <Compile Include="Views\MainView\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -148,6 +158,10 @@
     <Page Include="Themes\VeryDarkTheme.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Login\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainView\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

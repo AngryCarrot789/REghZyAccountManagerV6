@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace REghZyAccountManagerV6.Utils {
     public static class ReaderUtils {
@@ -17,14 +13,16 @@ namespace REghZyAccountManagerV6.Utils {
         /// whatever was read will be returned; simply check the compare string's length. 
         /// Null will be returned if no characters could be read (end of stream)
         /// </returns>
-        public static string ReadBlock(this TextReader reader, int count, int offsetIndex = 0) {
+        public static string ReadBlock(this TextReader reader, int count) {
             char[] chars = new char[count];
-            int read = reader.ReadBlock(chars, offsetIndex, count);
-            if (count != read) {
-                return new string(chars, 0, read);
+            int read = reader.ReadBlock(chars, 0, count);
+            if (count == read) {
+                return new string(chars);
             }
             else {
-                return new string(chars);
+                // just in case read somehow reads more than count... which it really shouldn't because that would
+                // overflow the char buffer and throw an exception... but just in case it somehow all works out...
+                return new string(chars, 0, Math.Min(read, count));
             }
         }
     }

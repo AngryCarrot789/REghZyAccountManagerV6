@@ -8,6 +8,8 @@ namespace REghZyAccountManagerV6.Accounting {
         // keeping the XML attributes just incase i add it back some day...
         // and so that i remember how to actually use XML serialisation :-)
 
+        public bool HasBeenModified { get; set; }
+
         [XmlIgnore]
         public string FilePath { get; set; }
 
@@ -40,7 +42,7 @@ namespace REghZyAccountManagerV6.Accounting {
 
         }
 
-        public AccountModel(string filePath, string accountName, string email, string username, string password, string dateOfBirth, string securityInfo, List<string> extraData) {
+        public AccountModel(string filePath, string accountName, string email, string username, string password, string dateOfBirth, string securityInfo, bool hasBeenModified, List<string> extraData) {
             this.FilePath = filePath;
             this.AccountName = accountName;
             this.Email = email;
@@ -49,6 +51,7 @@ namespace REghZyAccountManagerV6.Accounting {
             this.DateOfBirth = dateOfBirth;
             this.SecurityInfo = securityInfo;
             this.Data = extraData;
+            this.HasBeenModified = hasBeenModified;
         }
 
         public AccountModel(AccountViewModel account) {
@@ -59,11 +62,14 @@ namespace REghZyAccountManagerV6.Accounting {
             this.Password = account.Password;
             this.DateOfBirth = account.DateOfBirth;
             this.SecurityInfo = account.SecurityInfo;
+            this.HasBeenModified = account.HasBeenModified;
             this.Data = account.ExtraInfo.ExtraInformation.Select(d => d.Value).ToList();
         }
 
         public AccountViewModel ToViewModel() {
-            return new AccountViewModel(this.FilePath, this.AccountName, this.Email, this.Username, this.Password, this.DateOfBirth, this.SecurityInfo, this.Data);
+            return new AccountViewModel(this.FilePath, this.AccountName, this.Email, this.Username, this.Password, this.DateOfBirth, this.SecurityInfo, this.Data) {
+                HasBeenModified = this.HasBeenModified
+            };
         }
     }
 }

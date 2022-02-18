@@ -41,6 +41,10 @@ namespace REghZyAccountManagerV6.ViewModels {
 
         public ICommand MoveItemDownCommand { get; }
 
+        public ICommand MoveItemToTop { get; }
+
+        public ICommand MoveItemToBottom { get; }
+
         public AccountPanelViewModel() {
             this.Finder = new AccountFinderViewModel();
             this.CreateNewAccountCommand = new RelayCommand(this.CreateNewAccount);
@@ -51,6 +55,8 @@ namespace REghZyAccountManagerV6.ViewModels {
             this.UndoLastDeletionCommand = new RelayCommand(this.UndoLastDeletion);
             this.MoveItemUpCommand = new RelayCommand(() => ViewModelLocator.AccountCollection.MoveSelectedItemUp());
             this.MoveItemDownCommand = new RelayCommand(() => ViewModelLocator.AccountCollection.MoveSelectedItemDown());
+            this.MoveItemToTop = new RelayCommand(() => { ViewModelLocator.AccountCollection.MoveSelectedItemToBounds(true); });
+            this.MoveItemToBottom = new RelayCommand(() => { ViewModelLocator.AccountCollection.MoveSelectedItemToBounds(false); });
         }
 
         public void CreateNewAccount() {

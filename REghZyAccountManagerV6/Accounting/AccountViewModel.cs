@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using REghZy.MVVM.Commands;
@@ -20,7 +21,10 @@ namespace REghZyAccountManagerV6.Accounting {
 
         public bool HasBeenModified {
             get => this.hasBeenModified;
-            set => RaisePropertyChanged(ref this.hasBeenModified, value);
+            set {
+                RaisePropertyChanged(ref this.hasBeenModified, value);
+                ViewModelLocator.AccountCollection.MarkAccountModifed(this);
+            }
         }
 
         public string FilePath {

@@ -1,8 +1,6 @@
-using System.Collections.Generic;
 using System.Windows.Input;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
-using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.ViewModels;
 
 namespace REghZyAccountManagerV6.Views.MainView {
@@ -17,11 +15,18 @@ namespace REghZyAccountManagerV6.Views.MainView {
         /// </summary>
         public AccountCollectionViewModel Collection { get; }
 
+        /// <summary>
+        /// The account editor itself. This is only really used for animations, because of the grid splitter and stuff
+        /// </summary>
+        public AccountEditorViewModel Editor { get; }
+
         public ICommand FocusFindCommand { get; }
 
         public MainViewModel() {
             this.Panel = new AccountPanelViewModel();
             this.Collection = new AccountCollectionViewModel();
+            this.Editor = new AccountEditorViewModel();
+            this.Editor.EditorWidth = 375.0d;
 
             this.FocusFindCommand = new RelayCommand(()=> {
                 ServiceLocator.FindView.FocusInput();

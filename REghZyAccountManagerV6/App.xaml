@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:REghZyAccountManagerV6" 
              xmlns:converters="clr-namespace:REghZy.MVVM.Framework.Converters;assembly=REghZy.MVVM.Framework"
-             StartupUri="Views/MainView/MainWindow.xaml"
+             StartupUri="Views/Login/LoginWindow.xaml"
              ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>

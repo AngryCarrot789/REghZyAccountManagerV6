@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Xml.Serialization;
 using REghZyAccountManagerV6.Utils;
@@ -15,6 +17,8 @@ namespace REghZyAccountManagerV6.Accounting.IO {
 
         public XmlSerializer XmlSerializer { get; }
         public string Directory { get; set; }
+
+        private ICollection<string> visitedPathsNoExtension;
 
         public AccountIO(string directory) {
             this.Directory = directory;
@@ -39,13 +43,28 @@ namespace REghZyAccountManagerV6.Accounting.IO {
             return false;
         }
 
-        public string GetAccountPath(string accountName, string defaultPath = null) {
+        public string GetUniqueAccountPath(string accountName, string defaultPath) {
             string path = defaultPath;
-            if (string.IsNullOrEmpty(path) || !File.Exists(path)) {
-                path = Path.ChangeExtension(Path.Combine(this.Directory, FileHelper.GetValidAccountFileName(accountName)), FILE_EXTENSION);
+            if (string.IsNullOrEmpty(defaultPath) || !File.Exists(defaultPath)) {
+                path = Path.Combine(this.Directory, FileHelper.GetValidAccountFileName(accountName));
             }
 
-            return path;
+            ICollection<string> visited = this.visitedPathsNoExtension;
+            if (visited != null) {
+                path = Path.ChangeExtension(path, null);
+                if (visited.Contains(path)) {
+                    while (true) {
+                        path += '_';
+                        if (!File.Exists(path + FILE_EXTENSION_DOT)) {
+                            break;
+                        }
+                    }
+                }
+
+                visited.Add(path);
+            }
+
+            return Path.ChangeExtension(path, FILE_EXTENSION);
         }
 
         public IEnumerable<AccountModel> ReadAccountsFromDisk(Action<string, Exception> errorHandler) {
@@ -77,10 +96,10 @@ namespace REghZyAccountManagerV6.Accounting.IO {
         }
 
         public void WriteAccountsToDisk(IEnumerable<AccountModel> accounts, Action<AccountModel, Exception> errorHandler) {
-            XmlSerializer serializer = this.XmlSerializer;
+            this.visitedPathsNoExtension = new List<string>();
             foreach (AccountModel item in accounts) {
                 try {
-                    string path = GetAccountPath(item.AccountName, item.FilePath);
+                    string path = GetUniqueAccountPath(item.AccountName, item.FilePath);
                     // XML
                     // using (BufferedStream stream = new BufferedStream(File.OpenWrite(path), 1024)) {
                     //     serializer.Serialize(stream, item);
@@ -95,6 +114,8 @@ namespace REghZyAccountManagerV6.Accounting.IO {
                     errorHandler(item, e);
                 }
             }
+
+            this.visitedPathsNoExtension = null;
         }
 
         public static void WriteAccountToWriter(AccountViewModel account, TextWriter stream) {

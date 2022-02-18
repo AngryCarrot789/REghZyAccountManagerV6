@@ -5,8 +5,8 @@ using REghZyAccountManagerV6.Accounting;
 
 namespace REghZyAccountManagerV6.Utils {
     public class FileHelper {
-        private static char[] INVALID_FILENAME_CHARS_ARR = Path.GetInvalidFileNameChars();
-        private static char[] INVALID_PATH_CHARS_ARR = Path.GetInvalidPathChars();
+        private static readonly char[] INVALID_FILENAME_CHARS_ARR = Path.GetInvalidFileNameChars();
+        private static readonly char[] INVALID_PATH_CHARS_ARR = Path.GetInvalidPathChars();
         private static readonly HashSet<char> INVALID_FILENAME_CHARS;
 
         static FileHelper() {

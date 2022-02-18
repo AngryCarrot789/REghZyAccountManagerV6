@@ -29,6 +29,8 @@ namespace REghZyAccountManagerV6.Views.NewAccounts {
             this.Model.AccountName = "New Account";
             this.selectionIndex = 0;
             SelectNext();
+
+            // the functionality relies on a dialog blocking the rest of the app
             this.ShowDialog();
         }
 

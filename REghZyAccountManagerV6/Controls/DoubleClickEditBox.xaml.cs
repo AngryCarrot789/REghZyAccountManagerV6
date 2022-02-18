@@ -48,8 +48,6 @@ namespace REghZyAccountManagerV6.Controls {
                 typeof(DoubleClickEditBox),
                 new PropertyMetadata(TextWrapping.NoWrap));
 
-        public ICommand RenameCommand { get; }
-
         private void OnIsEditingChanged(bool oldValue, bool newValue) {
             if (newValue) {
                 this.PART_Preview.Visibility = Visibility.Collapsed;
@@ -80,14 +78,24 @@ namespace REghZyAccountManagerV6.Controls {
             set => SetValue(TextWrappingProperty, value);
         }
 
+        public ICommand EnableEditing { get; set; }
+
+        public ICommand DisableEditing { get; set; }
+
         public DoubleClickEditBox() {
             InitializeComponent();
-            this.RenameCommand = new RelayCommand(()=> {
+            this.EnableEditing = new RelayCommand(()=> {
                 if (this.IsEditing) {
                     return;
                 }
 
                 this.IsEditing = true;
+            });
+
+            this.DisableEditing = new RelayCommand(()=> {
+                if (this.IsEditing) {
+                    this.IsEditing = false;
+                }
             });
         }
 

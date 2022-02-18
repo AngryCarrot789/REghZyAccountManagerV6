@@ -2,6 +2,7 @@ using System;
 using REghZy.MVVM.IoC;
 using REghZyAccountManagerV6.Accounting.IO;
 using REghZyAccountManagerV6.Views;
+using REghZyAccountManagerV6.Views.Login;
 using REghZyAccountManagerV6.Views.MainView;
 
 namespace REghZyAccountManagerV6 {
@@ -35,6 +36,28 @@ namespace REghZyAccountManagerV6 {
             set {
                 if (value == null) {
                     throw new ArgumentNullException("value", "New find view cannot be set to null");
+                }
+
+                IoC.SetService(value);
+            }
+        }
+
+        public static IAccountList AccountList {
+            get => IoC.GetService<IAccountList>();
+            set {
+                if (value == null) {
+                    throw new ArgumentNullException("value", "New account list view cannot be set to null");
+                }
+
+                IoC.SetService(value);
+            }
+        }
+
+        public static ILoginView Login {
+            get => IoC.GetService<ILoginView>();
+            set {
+                if (IoC.HasService<ILoginView>()) {
+                    throw new ArgumentNullException("value", "Login view has already been set, it cannot be set again");
                 }
 
                 IoC.SetService(value);

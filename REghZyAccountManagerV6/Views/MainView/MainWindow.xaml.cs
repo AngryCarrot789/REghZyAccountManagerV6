@@ -4,11 +4,14 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.Accounting.IO;
+using REghZyAccountManagerV6.AttachedProperties;
+using REghZyAccountManagerV6.Utils;
 using REghZyAccountManagerV6.ViewModels;
 using REghZyAccountManagerV6.Views.NewAccounts;
 
@@ -21,7 +24,7 @@ namespace REghZyAccountManagerV6.Views.MainView {
 
         private bool isEditorOpen;
         private const double EDITOR_WIDTH_CLOSE = 0;
-        private const double EDITOR_WIDTH_OPEN = 350;
+        private const double EDITOR_WIDTH_OPEN = 375;
 
         public MainWindow() {
             InitializeComponent();
@@ -30,6 +33,7 @@ namespace REghZyAccountManagerV6.Views.MainView {
             ServiceLocator.InitCTOR();
             ServiceLocator.Editor = new EditorViewWrapper(this);
             ServiceLocator.FindView = new FindViewWrapper(this);
+            ServiceLocator.AccountList = new AccountListWrapper(this);
             ServiceLocator.NewAccount = new NewAccountWindow();
 
             ViewModelLocator.InitCTOR();
@@ -53,6 +57,48 @@ namespace REghZyAccountManagerV6.Views.MainView {
             foreach(AccountModel model in enumerable.OrderBy(d => d.Position)) {
                 accounts.Add(model.ToViewModel());
             }
+
+            // List<AccountModel> load = new List<AccountModel>();
+            // string dir = "C:\\Users\\kettl\\Documents\\IISExtended\\0x0000004TEMP\\NULL_ACCESS\\main";
+            // string[] list_0 = File.ReadAllLines(Path.Combine(dir, "accName.txt"));
+            // string[] list_1 = File.ReadAllLines(Path.Combine(dir, "email.txt"));
+            // string[] list_2 = File.ReadAllLines(Path.Combine(dir, "usrName.txt"));
+            // string[] list_3 = File.ReadAllLines(Path.Combine(dir, "pssWrd.txt"));
+            // string[] list_4 = File.ReadAllLines(Path.Combine(dir, "DtoBrth.txt"));
+            // string[] list_5 = File.ReadAllLines(Path.Combine(dir, "ScrtyInfo.txt"));
+            // string[] list_6 = File.ReadAllLines(Path.Combine(dir, "ExtInf1.txt"));
+            // string[] list_7 = File.ReadAllLines(Path.Combine(dir, "ExtInf2.txt"));
+            // string[] list_8 = File.ReadAllLines(Path.Combine(dir, "ExtInf3.txt"));
+            // string[] list_9 = File.ReadAllLines(Path.Combine(dir, "ExtInf4.txt"));
+            // string[] list_10 = File.ReadAllLines(Path.Combine(dir, "ExtInf5.txt"));
+            // 
+            // void doAdd(ref AccountModel model, string element) {
+            //     if (!string.IsNullOrEmpty(element)) {
+            //         model.Data.Add(element);
+            //     }
+            // }
+            // 
+            // for(int i = 0; i < list_0.Length; i++) {
+            //     AccountModel model = new AccountModel();
+            //     model.Position = i;
+            //     model.AccountName = list_0[i];
+            //     model.Email = list_1[i];
+            //     model.Username = list_2[i];
+            //     model.Password = list_3[i];
+            //     model.DateOfBirth = list_4[i];
+            //     model.SecurityInfo = list_5[i];
+            //     model.Data = new List<string>();
+            //     doAdd(ref model, list_6[i]);
+            //     doAdd(ref model, list_7[i]);
+            //     doAdd(ref model, list_8[i]);
+            //     doAdd(ref model, list_9[i]);
+            //     doAdd(ref model, list_10[i]);
+            //     load.Add(model);
+            // }
+            // 
+            // foreach (AccountModel model in load.OrderBy(d => d.Position)) {
+            //     accounts.Add(model.ToViewModel());
+            // }
 
             // Window window = new Window();
             // Ellipse ellipse = new Ellipse();
@@ -78,9 +124,9 @@ namespace REghZyAccountManagerV6.Views.MainView {
                 return;
             }
 
-            int a = 0;
+            int count = 0;
             ServiceLocator.AccountIO.WriteAccountsToDisk(
-                ViewModelLocator.AccountCollection.Accounts.Select(acc => new AccountModel(acc) { Position = a++ }),
+                ViewModelLocator.AccountCollection.Accounts.Select(acc => new AccountModel(acc) { Position = count++ }).Where(d => d.HasBeenModified),
                 (model, exception) => {
                     MessageBox.Show($"Failed to write account (named {model.AccountName}) to disk. Reason: {exception.Message}", "Error");
                     e.Cancel = true;
@@ -97,6 +143,7 @@ namespace REghZyAccountManagerV6.Views.MainView {
 
             this.EditorColumn.Width = new GridLength(to);
             // this.EditorColumn.BeginAnimation(WidthProperty, animation);
+            // this.EditorColumn.BeginAnimation(ColumnDefinitionAttachedProperties.AnimatableGridWidthProperty, animation);
         }
 
         private class EditorViewWrapper : IAccountEditor {
@@ -138,6 +185,18 @@ namespace REghZyAccountManagerV6.Views.MainView {
             }
         }
 
+        public class AccountListWrapper : IAccountList {
+            private readonly MainWindow window;
+
+            public AccountListWrapper(MainWindow window) {
+                this.window = window;
+            }
+
+            public void ScrollToAccount(AccountViewModel account) {
+                this.window.AccountListBox.ScrollIntoView(account);
+            }
+        }
+
         private List<AccountModel> accounts;
         private void ListBox_DragEnter(object sender, DragEventArgs e) {
             if (e.Data.GetData(DataFormats.FileDrop) is string[] paths) {
@@ -151,18 +210,21 @@ namespace REghZyAccountManagerV6.Views.MainView {
                     try {
                         AccountModel model = new AccountModel();
                         using (FileStream stream = File.OpenRead(path)) {
+                            stream.Seek(0, SeekOrigin.Begin);
                             // inefficient reading, but only for the preamble
                             StreamReader reader = new StreamReader(stream);
-                            string preamble = reader.ReadLine();
+                            string preamble = reader.ReadBlock(AccountIO.PREAMBLE.Length);
                             if (preamble == null || preamble != AccountIO.PREAMBLE) {
                                 continue;
                             }
 
                             // switch to buffered reading to read blocks of memory
-                            reader = new StreamReader(new BufferedStream(stream, 1024));
+                            BufferedStream buffered = new BufferedStream(stream, 1024);
+                            reader = new StreamReader(buffered);
+                            buffered.Seek(0, SeekOrigin.Begin);
 
                             try {
-                                AccountIO.ReadAccountFromReader(ref model, reader, false);
+                                AccountIO.ReadAccountFromReader(ref model, reader);
                             }
                             catch(Exception fail) { // may not be a valid account file, so ignore it
                                 continue;
@@ -186,11 +248,17 @@ namespace REghZyAccountManagerV6.Views.MainView {
             if (this.accounts != null) {
                 AccountCollectionViewModel vm = ViewModelLocator.AccountCollection;
                 foreach (AccountModel account in this.accounts) {
-                    vm.AddNewAccount(account.ToViewModel(), false);
+                    AccountViewModel acc = account.ToViewModel();
+                    acc.MarkModified();
+                    vm.AddNewAccount(acc, false);
                 }
 
                 this.accounts = null;
             }
+        }
+
+        private void GridSplitter_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+            ViewModelLocator.AccountPanel.IsEditorOpen = !ViewModelLocator.AccountPanel.IsEditorOpen;
         }
     }
 }

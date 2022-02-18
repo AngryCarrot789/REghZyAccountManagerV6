@@ -8,9 +8,9 @@ using REghZy.MVVM.ViewModels;
 
 namespace REghZyAccountManagerV6.Accounting {
     public class ExtraData : BaseViewModel {
-        public bool a;
-        public bool b;
-        public bool c;
+        private bool a;
+        private bool b;
+        private bool c;
 
 
         private string value;

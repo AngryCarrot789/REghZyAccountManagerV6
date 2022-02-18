@@ -13,8 +13,10 @@
         d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" 
-        Width="1150" 
-        Height="680"
+        Width="1280" 
+        Height="760"
+        MinWidth="750"
+        MinHeight="525"
         Style="{DynamicResource CustomWindowStyle}"
         DataContext="{x:Static app:ViewModelLocator.MainView}" 
         Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
@@ -63,7 +65,7 @@
                     </StackPanel>
                 </ToggleButton>
                 <Separator Height="1" Margin="0,165,0,0" VerticalAlignment="Top" />
-                <Grid Margin="0,171,0,96" DataContext="{Binding Finder, Mode=OneTime}">
+                <Grid Margin="0,171,0,0" DataContext="{Binding Finder, Mode=OneTime}">
                     <TextBox VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center"
                              Padding="4 1" BorderThickness="1 1 1 1" Margin="0,27,0,0" 
                              Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"
@@ -83,7 +85,8 @@
                              BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
                              Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
                              ItemsSource="{Binding FoundAccounts, Mode=OneTime}"
-                             ToolTip="Contains all of the found accounts. Double click a found account to select it in the main account list">
+                             ToolTip="Contains all of the found accounts. Double click a found account to select it in the main account list"
+                             FocusManager.IsFocusScope="True">
                         <ListBox.ItemTemplate>
                             <DataTemplate>
                                 <controls:SmallAccountControl DataContext="{Binding}" ContextMenu="{DynamicResource AccountContextMenu}">
@@ -133,131 +136,152 @@
                         </Border>
                     </Expander>
                 </Grid>
-                <Separator Height="1" Margin="0,0,0,90" VerticalAlignment="Bottom"/>
-                <Button VerticalAlignment="Bottom" Height="40" Content="Move Account Up" Margin="0,0,0,45"
-                        Command="{Binding MoveItemUpCommand, Mode=OneTime}"/>
-                <Button VerticalAlignment="Bottom" Height="40" Content="Move Account Down"
-                        Command="{Binding MoveItemDownCommand, Mode=OneTime}"/>
             </Grid>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
-            <Grid Grid.Column="2" DataContext="{Binding Collection, Mode=OneTime}" Margin="0,40,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="10"/>
-                    <ColumnDefinition Width="350" x:Name="EditorColumn" MaxWidth="750"/>
-                </Grid.ColumnDefinitions>
-                <Grid x:Name="EditorView" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,10,0">
-                    <Grid DataContext="{Binding SelectedAccount, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
-                        <Grid Height="217" VerticalAlignment="Top">
-                            <ctrls:DoubleClickEditBox Text="{Binding AccountName, FallbackValue=BINDING_ERROR_ACCNAME, UpdateSourceTrigger=PropertyChanged}" 
-                                                      HorizontalContentAlignment="Center"
-                                                      VerticalAlignment="Top" 
-                                                      VerticalContentAlignment="Center" 
-                                                      Background="Transparent" 
-                                                      BorderBrush="Transparent" 
-                                                      FontSize="16"
-                                                      Height="32"
-                                                      ToolTip="Double click to edit..." 
-                                                      FontWeight="Bold"/>
-                            <Grid Margin="0,0,0,148" Height="32" VerticalAlignment="Bottom">
-                                <Label VerticalContentAlignment="Center" FontSize="14" Content="Email" HorizontalAlignment="Left" Width="80"/>
-                                <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+            <Grid Grid.Column="2" Margin="0,40,0,0">
+                <Grid Height="40" VerticalAlignment="Bottom" DataContext="{Binding Panel, Mode=OneTime}" Margin="0,0,10,0">
+                    <TextBlock HorizontalAlignment="Left" Width="95" VerticalAlignment="Center" TextAlignment="Center"><Run Text="Move selected"/><LineBreak/><Run Text="account position"/></TextBlock>
+                    <Button Command="{Binding MoveItemUpCommand, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="UP" Margin="100,0,0,0" Width="55"/>
+                    <Button Command="{Binding MoveItemDownCommand, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="DOWN" Margin="160,0,0,0" Width="55"/>
+                    <Button Command="{Binding MoveItemToTop, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="To Top" Margin="220,0,0,0" Width="75"/>
+                    <Button Command="{Binding MoveItemToBottom, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="To Bottom" Margin="300,0,0,0" Width="75"/>
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" DataContext="{x:Static app:ViewModelLocator.AccountCollection}" Margin="0,0,0,0">
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding Accounts.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Accounts"/></TextBlock>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding SaveQueueCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Queued for save"/></TextBlock>
+                    </StackPanel>
+                </Grid>
+                <Grid Margin="0,0,0,50" DataContext="{Binding Collection, Mode=OneTime}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="{Binding Path=EditorWidth, Source={x:Static app:ViewModelLocator.AccountEditor}, UpdateSourceTrigger=PropertyChanged}"
+                                          x:Name="EditorColumn" 
+                                          MaxWidth="750"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid x:Name="EditorView" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,10,0">
+                        <Grid DataContext="{Binding SelectedAccount, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+                            <Grid Height="217" VerticalAlignment="Top">
+                                <ctrls:DoubleClickEditBox Text="{Binding AccountName, FallbackValue=BINDING_ERROR_ACCNAME, UpdateSourceTrigger=PropertyChanged}" 
+                                    HorizontalContentAlignment="Center"
+                                    VerticalAlignment="Top" 
+                                    VerticalContentAlignment="Center" 
+                                    Background="Transparent" 
+                                    BorderBrush="Transparent" 
+                                    FontSize="16"
+                                    Height="32"
+                                    ToolTip="Double click to edit..." 
+                                    FontWeight="Bold"/>
+                                <Grid Margin="0,0,0,148" Height="32" VerticalAlignment="Bottom">
+                                    <Label VerticalContentAlignment="Center" FontSize="14" Content="Email" HorizontalAlignment="Left" Width="80"/>
+                                    <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,111" Height="32" VerticalAlignment="Bottom">
+                                    <Label VerticalContentAlignment="Center" FontSize="14" Content="Username" HorizontalAlignment="Left" Width="80"/>
+                                    <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,74" Height="32" VerticalAlignment="Bottom">
+                                    <Label VerticalContentAlignment="Center" FontSize="14" Content="Password" HorizontalAlignment="Left" Width="80"/>
+                                    <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                </Grid>
+                                <Grid Margin="0,0,0,37" Height="32" VerticalAlignment="Bottom">
+                                    <Label VerticalContentAlignment="Center" FontSize="14" Content="D.O.B" HorizontalAlignment="Left" Width="80"/>
+                                    <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                </Grid>
+                                <Grid Height="32" VerticalAlignment="Bottom">
+                                    <Label VerticalContentAlignment="Center" FontSize="14" Content="Security" HorizontalAlignment="Left" Width="80"/>
+                                    <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding SecurityInfo, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding SecurityInfo, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                </Grid>
                             </Grid>
-                            <Grid Margin="0,0,0,111" Height="32" VerticalAlignment="Bottom">
-                                <Label VerticalContentAlignment="Center" FontSize="14" Content="Username" HorizontalAlignment="Left" Width="80"/>
-                                <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
-                            </Grid>
-                            <Grid Margin="0,0,0,74" Height="32" VerticalAlignment="Bottom">
-                                <Label VerticalContentAlignment="Center" FontSize="14" Content="Password" HorizontalAlignment="Left" Width="80"/>
-                                <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
-                            </Grid>
-                            <Grid Margin="0,0,0,37" Height="32" VerticalAlignment="Bottom">
-                                <Label VerticalContentAlignment="Center" FontSize="14" Content="D.O.B" HorizontalAlignment="Left" Width="80"/>
-                                <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
-                            </Grid>
-                            <Grid Height="32" VerticalAlignment="Bottom">
-                                <Label VerticalContentAlignment="Center" FontSize="14" Content="Security" HorizontalAlignment="Left" Width="80"/>
-                                <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding SecurityInfo, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding SecurityInfo, UpdateSourceTrigger=PropertyChanged}"/>
-                                <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
-                            </Grid>
-                        </Grid>
-                        <Separator VerticalAlignment="Top" Margin="10,227,0,0" Background="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"/>
-                        <Grid Margin="0,233,0,0">
-                            <Label Content="Custom Information" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                            <Grid Margin="0,31,0,0" DataContext="{Binding ExtraInfo, Mode=OneTime}">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="27"/>
-                                    <RowDefinition Height="1*"/>
-                                </Grid.RowDefinitions>
-                                <TextBox Text="{Binding ToAdd, UpdateSourceTrigger=PropertyChanged}"
-                                         Tag="Add custom data here..." BorderThickness="1 1 1 1" 
-                                         VerticalContentAlignment="Center" Margin="0,0,190,0" Padding="3 1 1 1" 
-                                         Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"
-                                         BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
-                                         Style="{StaticResource HintedTextBox}">
-                                    <TextBox.InputBindings>
-                                        <KeyBinding Command="{Binding AddItemCommand, Mode=OneTime}" Key="Enter"/>
-                                    </TextBox.InputBindings>
-                                </TextBox>
-                                <Border Margin="0,26,150,0" BorderThickness="1 0" 
-                                        BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"
-                                        Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" Visibility="Collapsed"/>
-                                <Button Command="{Binding AddItemCommand, Mode=OneTime}" Content="Add" Margin="0,0,125,0" BorderThickness="0 1 0 1" HorizontalAlignment="Right" Width="65" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" ToolTip="Adds the text (on the left) into the list below"/>
-                                <Button Command="{Binding RemoveItemCommand, Mode=OneTime}" Content="Remove" BorderThickness="1 1 0 1" HorizontalAlignment="Right" Width="70" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Margin="0,0,55,0" ToolTip="Removes the selected element below"/>
-                                <Button Command="{Binding PasteItemCommand, Mode=OneTime}" Content="Paste" BorderThickness="1 1 1 1" HorizontalAlignment="Right" Width="55" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" ToolTip="Adds the text (in your clipboard) into the list below"/>
-                                <ListBox Grid.Row="1" 
-                                         BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
-                                         Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
-                                         BorderThickness="1 0 1 1" 
-                                         ItemsSource="{Binding ExtraInformation, Mode=OneTime}"
-                                         SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
-                                         HorizontalContentAlignment="Stretch"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                         ToolTip="A list of extra/custom data you can associate with this account. Double click to edit existing items (similar to renaming files in windows). The text editor may be slightly glitchy with lots of continuous characters without whitespaces, due to text wrapping">
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <ctrls:DoubleClickEditBox VerticalAlignment="Bottom" Height="27" Grid.Row="1" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" MinHeight="30" Margin="-5,-2"/>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
+                            <Separator VerticalAlignment="Top" Margin="10,227,0,0" Background="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"/>
+                            <Grid Margin="0,233,0,0">
+                                <Label Content="Custom Information" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
+                                <Grid Margin="0,31,0,0" DataContext="{Binding ExtraInfo, Mode=OneTime}">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="27"/>
+                                        <RowDefinition Height="1*"/>
+                                    </Grid.RowDefinitions>
+                                    <TextBox Text="{Binding ToAdd, UpdateSourceTrigger=PropertyChanged}"
+                                             Tag="Add custom data here..." BorderThickness="1 1 1 1" 
+                                             VerticalContentAlignment="Center" Margin="0,0,190,0" Padding="3 1 1 1" 
+                                             Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"
+                                             BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
+                                             Style="{StaticResource HintedTextBox}">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Command="{Binding AddItemCommand, Mode=OneTime}" Key="Enter"/>
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                    <Border Margin="0,26,150,0" BorderThickness="1 0" 
+                                            BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"
+                                            Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" Visibility="Collapsed"/>
+                                    <Button Command="{Binding AddItemCommand, Mode=OneTime}" Content="Add" Margin="0,0,125,0" BorderThickness="0 1 0 1" HorizontalAlignment="Right" Width="65" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" ToolTip="Adds the text (on the left) into the list below"/>
+                                    <Button Command="{Binding RemoveItemCommand, Mode=OneTime}" Content="Remove" BorderThickness="1 1 0 1" HorizontalAlignment="Right" Width="70" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Margin="0,0,55,0" ToolTip="Removes the selected element below"/>
+                                    <Button Command="{Binding PasteItemCommand, Mode=OneTime}" Content="Paste" BorderThickness="1 1 1 1" HorizontalAlignment="Right" Width="55" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" ToolTip="Adds the text (in your clipboard) into the list below"/>
+                                    <ListBox Grid.Row="1" 
+                                             BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
+                                             Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
+                                             BorderThickness="1 0 1 1" 
+                                             ItemsSource="{Binding ExtraInformation, Mode=OneTime}"
+                                             SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
+                                             HorizontalContentAlignment="Stretch"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             ToolTip="A list of extra/custom data you can associate with this account. Double click to edit existing items (similar to renaming files in windows). The text editor may be slightly glitchy with lots of continuous characters without whitespaces, due to text wrapping">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid Background="Transparent">
+                                                    <Grid.InputBindings>
+                                                        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyToClipboard, Mode=OneTime}"/>
+                                                    </Grid.InputBindings>
+                                                    <ctrls:DoubleClickEditBox x:Name="DCEB" VerticalAlignment="Bottom" Height="27" Grid.Row="0" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" MinHeight="30" Margin="-5,-2,47,-2"/>
+                                                    <Button Content="Copy" Command="{Binding CopyToClipboard, Mode=OneTime}" Margin="0,0,-3,0" HorizontalAlignment="Right" Width="49"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-                <ctrls:AutoClosingGridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Grid.Column="1"
-                                               MinSizeForAutoClose="350"
-                                               TargetDefinition="{Binding Path=., ElementName=EditorColumn}"
-                                               IsOpen="{Binding IsEditorOpen, Source={x:Static app:ViewModelLocator.AccountPanel}, UpdateSourceTrigger=PropertyChanged}"/>
-                <Grid>
-                    <Border Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" BorderThickness="1" 
-                        BorderBrush="{DynamicResource AREghZyBrush.Deep.2.Border.Static}">
-                        <ListBox ScrollViewer.CanContentScroll="False"
-                            utils:HorizontalScrolling.UseHorizontalScrolling="True"
-                            utils:HorizontalScrolling.HorizontalScrollAmount="3"
-                            HorizontalContentAlignment="Stretch"
-                            ItemsSource="{Binding Accounts, UpdateSourceTrigger=PropertyChanged}"
-                            SelectedItem="{Binding SelectedAccount, UpdateSourceTrigger=PropertyChanged}" 
-                            SelectedIndex="{Binding SelectedIndex, UpdateSourceTrigger=PropertyChanged}"
-                            Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
-                            DragEnter="ListBox_DragEnter"
-                            DragLeave="ListBox_DragLeave"
-                            Drop="ListBox_Drop"
-                            AllowDrop="True">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <controls:LargeAccountControl DataContext="{Binding}" ContextMenu="{DynamicResource DeletableAccountContextMenu}">
-                                        <controls:LargeAccountControl.InputBindings>
-                                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding SelectCommand, Mode=OneTime}"/>
-                                        </controls:LargeAccountControl.InputBindings>
-                                    </controls:LargeAccountControl>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </Border>
+                    <!--
+                    <ctrls:AutoClosingGridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Grid.Column="1"
+                               MinSizeForAutoClose="350"
+                               TargetDefinition="{Binding ., ElementName=EditorColumn}"
+                               IsOpen="{Binding IsEditorOpen, Source={x:Static app:ViewModelLocator.AccountPanel}, UpdateSourceTrigger=PropertyChanged}"/>
+                    -->
+                    <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Grid.Column="1"
+                                  MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
+                    <Grid>
+                        <Border Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" BorderThickness="1" 
+                                BorderBrush="{DynamicResource AREghZyBrush.Deep.2.Border.Static}">
+                            <ListBox ScrollViewer.CanContentScroll="False"
+                                     utils:HorizontalScrolling.UseHorizontalScrolling="True"
+                                     utils:HorizontalScrolling.HorizontalScrollAmount="3"
+                                     HorizontalContentAlignment="Stretch"
+                                     ItemsSource="{Binding Accounts, UpdateSourceTrigger=PropertyChanged}"
+                                     SelectedItem="{Binding SelectedAccount, UpdateSourceTrigger=PropertyChanged}" 
+                                     SelectedIndex="{Binding SelectedIndex, UpdateSourceTrigger=PropertyChanged}"
+                                     Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"
+                                     DragEnter="ListBox_DragEnter"
+                                     DragLeave="ListBox_DragLeave"
+                                     Drop="ListBox_Drop"
+                                     AllowDrop="True"
+                                     x:Name="AccountListBox">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <controls:LargeAccountControl DataContext="{Binding}" ContextMenu="{DynamicResource DeletableAccountContextMenu}">
+                                            <controls:LargeAccountControl.InputBindings>
+                                                <MouseBinding Gesture="LeftDoubleClick" Command="{Binding SelectCommand, Mode=OneTime}"/>
+                                            </controls:LargeAccountControl.InputBindings>
+                                        </controls:LargeAccountControl>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </Border>
+                    </Grid>
                 </Grid>
             </Grid>
         </Grid>

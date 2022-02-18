@@ -1,21 +1,31 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 namespace REghZyAccountManagerV6.AttachedProperties {
-    public static class TextBoxHinting {
+    public static class TextHinting {
         public static readonly DependencyProperty ShowWhenFocusedProperty =
             DependencyProperty.RegisterAttached(
                 "ShowWhenFocused",
                 typeof(bool),
-                typeof(TextBoxHinting),
+                typeof(TextHinting),
                 new FrameworkPropertyMetadata(false));
 
-        public static void SetShowWhenFocused(TextBox textBox, bool value) {
-            textBox.SetValue(ShowWhenFocusedProperty, value);
+        public static void SetShowWhenFocused(Control control, bool value) {
+            if (control is TextBoxBase || control is PasswordBox) {
+                control.SetValue(ShowWhenFocusedProperty, value);
+            }
+
+            throw new ArgumentException("Control was not a textbox", "control");
         }
 
-        public static bool GetShowWhenFocused(TextBox textBox) {
-            return (bool) textBox.GetValue(ShowWhenFocusedProperty);
+        public static bool GetShowWhenFocused(Control control) {
+            if (control is TextBoxBase || control is PasswordBox) {
+                return (bool) control.GetValue(ShowWhenFocusedProperty);
+            }
+
+            throw new ArgumentException("Control was not a textbox", "control");
         }
     }
 }

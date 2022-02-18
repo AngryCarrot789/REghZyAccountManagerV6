@@ -29,7 +29,13 @@ namespace REghZyAccountManagerV6 {
                 IoC.SetViewModel(value);
                 AccountPanel = value.Panel;
                 AccountCollection = value.Collection;
+                AccountEditor = value.Editor;
             }
+        }
+
+        public static AccountPanelViewModel AccountPanel {
+            get => IoC.GetViewModel<AccountPanelViewModel>();
+            private set => IoC.SetViewModel(value);
         }
 
         public static AccountCollectionViewModel AccountCollection {
@@ -37,8 +43,8 @@ namespace REghZyAccountManagerV6 {
             private set => IoC.SetViewModel(value);
         }
 
-        public static AccountPanelViewModel AccountPanel {
-            get => IoC.GetViewModel<AccountPanelViewModel>();
+        public static AccountEditorViewModel AccountEditor {
+            get => IoC.GetViewModel<AccountEditorViewModel>();
             private set => IoC.SetViewModel(value);
         }
 
