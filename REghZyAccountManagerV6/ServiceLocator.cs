@@ -64,6 +64,17 @@ namespace REghZyAccountManagerV6 {
             }
         }
 
+        public static ISettings Settings {
+            get => IoC.GetService<ISettings>();
+            set {
+                if (IoC.HasService<ISettings>()) {
+                    throw new ArgumentNullException("value", "Settings view has already been set, it cannot be set again");
+                }
+
+                IoC.SetService(value);
+            }
+        }
+
         public static AccountIO AccountIO {
             get => IoC.GetService<AccountIO>();
             set {

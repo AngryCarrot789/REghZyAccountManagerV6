@@ -28,7 +28,13 @@
     </Window.Resources>
     <Grid>
         <Menu VerticalAlignment="Top">
-            <MenuItem Header="File"/>
+            <MenuItem Header="File">
+                <MenuItem Header="Preferences..." Command="{Binding Source={x:Static app:ServiceLocator.Settings}, Path=OpenViewCommand, Mode=OneTime}">
+                    <MenuItem.Icon>
+                        <Image Source="/REghZyAccountManagerV6;component/Resources/preferencesIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
         </Menu>
         <Grid Margin="10,18,0,10">
             <Grid.ColumnDefinitions>
@@ -42,101 +48,6 @@
             <ContentControl Height="40" VerticalAlignment="Top" Grid.Column="2">
                 <TextBlock Text="Account list and editor" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" TextDecorations="Underline"/>
             </ContentControl>
-            <Grid DataContext="{Binding Panel, Mode=OneTime}" Margin="0,40,0,0">
-                <Button Command="{Binding CreateNewAccountCommand, Mode=OneTime}" VerticalAlignment="Top" Height="50">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="32" Height="32" Margin="0 0 10 0" Source="/REghZyAccountManagerV6;component/Resources/addAccountIcon.png"/>
-                        <TextBlock Text="Create New Account" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-                <Button Command="{Binding DeleteSelectedAccountCommand, Mode=OneTime}" VerticalAlignment="Top" Height="50" Margin="55,55,0,0">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="32" Height="32" Margin="0 0 10 0" Source="/REghZyAccountManagerV6;component/Resources/deleteAccountIcon.png"/>
-                        <TextBlock Text="Delete Selected" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-                <Button Command="{Binding UndoLastDeletionCommand, Mode=OneTime}" Content="Undo" HorizontalContentAlignment="Center" Margin="0,55,0,0" 
-                        IsEnabled="{Binding Path=CanUndo, Source={x:Static app:ViewModelLocator.AccountCollection}, UpdateSourceTrigger=PropertyChanged}" 
-                        Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
-                <ToggleButton IsChecked="{Binding IsEditorOpen, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="50" Margin="0,110,0,0">
-                    <StackPanel Orientation="Horizontal" Margin="0 0 32 0">
-                        <Image Width="32" Height="32" Margin="0 0 10 0" Source="/REghZyAccountManagerV6;component/Resources/editAccountIcon.png"/>
-                        <TextBlock Text="{Binding IsEditorOpen, Converter={StaticResource BoolToStringConverter}, ConverterParameter=Close Editor|Open Editor}" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </ToggleButton>
-                <Separator Height="1" Margin="0,165,0,0" VerticalAlignment="Top" />
-                <Grid Margin="0,171,0,0" DataContext="{Binding Finder, Mode=OneTime}">
-                    <TextBox VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center"
-                             Padding="4 1" BorderThickness="1 1 1 1" Margin="0,27,0,0" 
-                             Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"
-                             Text="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
-                             x:Name="FindInputBox" utils:HorizontalScrolling.UseHorizontalScrolling="True" 
-                             BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
-                             Tag="Search for an account here..."
-                             ToolTip="Type a part of an account, to try and search for it. There are extra options in the drop down above"
-                             Style="{StaticResource HintedTextBox}"/>
-                    <ListBox VerticalContentAlignment="Center" 
-                             IsTabStop="False"
-                             utils:HorizontalScrolling.UseHorizontalScrolling="True"
-                             Margin="0,56,0,30" 
-                             BorderThickness="1 0 1 1" 
-                             HorizontalContentAlignment="Stretch"
-                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                             BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
-                             Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
-                             ItemsSource="{Binding FoundAccounts, Mode=OneTime}"
-                             ToolTip="Contains all of the found accounts. Double click a found account to select it in the main account list"
-                             FocusManager.IsFocusScope="True">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <controls:SmallAccountControl DataContext="{Binding}" ContextMenu="{DynamicResource AccountContextMenu}">
-                                    <controls:SmallAccountControl.InputBindings>
-                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding SelectCommand, Mode=OneTime}"/>
-                                    </controls:SmallAccountControl.InputBindings>
-                                </controls:SmallAccountControl>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                    <Button VerticalAlignment="Bottom" Height="30" Content="Clear" 
-                            BorderThickness="1 0 1 1"
-                            BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
-                            Command="{Binding ClearResultsCommand, Mode=OneTime}"/>
-                    <Expander VerticalAlignment="Top" VerticalContentAlignment="Center" Header="Search Options" HorizontalAlignment="Left" Width="181">
-                        <Border Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
-                            <Border.BitmapEffect>
-                                <DropShadowBitmapEffect ShadowDepth="1"/>
-                            </Border.BitmapEffect>
-                            <StackPanel Margin="5">
-                                <Label Height="20" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                                    <TextBlock Text="Preferences"/>
-                                </Label>
-                                <CheckBox Content="Search contains" IsChecked="{Binding CheckContains, UpdateSourceTrigger=PropertyChanged}" 
-                                          ToolTip="True to check any account that contains the search text, otherwise only if it starts with it"/>
-                                <Separator Height="1"/>
-                                <Label Height="20" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
-                                    <TextBlock Text="Search Type"/>
-                                </Label>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="42*"/>
-                                        <ColumnDefinition Width="2"/>
-                                        <ColumnDefinition Width="50*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Button Content="Select All"   Margin="0,1,0,1" Command="{Binding SelectAllCommand, Mode=OneTime}"/>
-                                    <Button Content="Deselect All"   Margin="0,1,0,1" Grid.Column="2" Command="{Binding DeselectAllCommand, Mode=OneTime}"/>
-                                </Grid>
-                                <CheckBox Content="Account Name"   Margin="0,1,0,1" IsChecked="{Binding SearchAccountName, UpdateSourceTrigger=PropertyChanged}"/>
-                                <CheckBox Content="Email"          Margin="0,1,0,1" IsChecked="{Binding SearchEmail, UpdateSourceTrigger=PropertyChanged}"/>
-                                <CheckBox Content="Username"       Margin="0,1,0,1" IsChecked="{Binding SearchUsername, UpdateSourceTrigger=PropertyChanged}"/>
-                                <CheckBox Content="Password"       Margin="0,1,0,1" IsChecked="{Binding SearchPassword, UpdateSourceTrigger=PropertyChanged}"/>
-                                <CheckBox Content="Date of Birth"  Margin="0,1,0,1" IsChecked="{Binding SearchDateOfBirth, UpdateSourceTrigger=PropertyChanged}"/>
-                                <CheckBox Content="Security Info"  Margin="0,1,0,1" IsChecked="{Binding SearchSecurityInfo, UpdateSourceTrigger=PropertyChanged}"/>
-                                <CheckBox Content="Custom Info"    Margin="0,1,0,1" IsChecked="{Binding SearchExtraInfo, UpdateSourceTrigger=PropertyChanged}"/>
-                            </StackPanel>
-                        </Border>
-                    </Expander>
-                </Grid>
-            </Grid>
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
             <Grid Grid.Column="2" Margin="0,40,0,0">
                 <Grid Height="40" VerticalAlignment="Bottom" DataContext="{Binding Panel, Mode=OneTime}" Margin="0,0,10,0">
@@ -149,6 +60,9 @@
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding Accounts.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Accounts"/></TextBlock>
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding SaveQueueCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Queued for save"/></TextBlock>
                     </StackPanel>
+
+                    <ctrls:NumberSelector x:Name="Ok" NormalIncrement="4" Minimum="50" Maximum="65" Value="55" Margin="380,0,0,0" HorizontalAlignment="Left" Width="100" Height="24" VerticalAlignment="Bottom"/>
+                    <TextBlock Text="{Binding ElementName=Ok, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="485,0,0,0" HorizontalAlignment="Left" Width="100" Height="24" VerticalAlignment="Bottom"/>
                 </Grid>
                 <Grid Margin="0,0,0,50" DataContext="{Binding Collection, Mode=OneTime}">
                     <Grid.ColumnDefinitions>
@@ -282,6 +196,176 @@
                             </ListBox>
                         </Border>
                     </Grid>
+                </Grid>
+            </Grid>
+            <Grid DataContext="{Binding Panel, Mode=OneTime}" Margin="0,40,0,0">
+                <Button Command="{Binding CreateNewAccountCommand, Mode=OneTime}" VerticalAlignment="Top" Height="50">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="32" Height="32" Margin="0 0 10 0" Source="/REghZyAccountManagerV6;component/Resources/addAccountIcon.png"/>
+                        <TextBlock Text="Create New Account" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding DeleteSelectedAccountCommand, Mode=OneTime}" VerticalAlignment="Top" Height="50" Margin="55,55,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="32" Height="32" Margin="0 0 10 0" Source="/REghZyAccountManagerV6;component/Resources/deleteAccountIcon.png"/>
+                        <TextBlock Text="Delete Selected" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Command="{Binding UndoLastDeletionCommand, Mode=OneTime}" Content="Undo" HorizontalContentAlignment="Center" Margin="0,55,0,0" 
+                        IsEnabled="{Binding Path=CanUndo, Source={x:Static app:ViewModelLocator.AccountCollection}, UpdateSourceTrigger=PropertyChanged}" 
+                        Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
+                <ToggleButton IsChecked="{Binding IsEditorOpen, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="50" Margin="0,110,0,0">
+                    <StackPanel Orientation="Horizontal" Margin="0 0 32 0">
+                        <Image Width="32" Height="32" Margin="0 0 10 0" Source="/REghZyAccountManagerV6;component/Resources/editAccountIcon.png"/>
+                        <TextBlock Text="{Binding IsEditorOpen, Converter={StaticResource BoolToStringConverter}, ConverterParameter=Close Editor|Open Editor}" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </ToggleButton>
+                <Separator Height="1" Margin="0,165,0,0" VerticalAlignment="Top" />
+                <Grid Margin="0,171,0,0" DataContext="{Binding Finder, Mode=OneTime}">
+                    <TextBox VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center"
+                             Padding="4 1" BorderThickness="1 1 1 1" Margin="0,0,29,0" 
+                             Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"
+                             Text="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
+                             x:Name="FindInputBox" utils:HorizontalScrolling.UseHorizontalScrolling="True" 
+                             BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
+                             Tag="Search for an account here..."
+                             ToolTip="Type a part of an account, to try and search for it. There are extra options in the drop down above"
+                             Style="{StaticResource HintedTextBox}">
+                        <TextBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding FocusListCommand, Mode=OneTime}"/>
+                            <KeyBinding Key="Tab" Command="{Binding FocusListCommand, Mode=OneTime}"/>
+                        </TextBox.InputBindings>
+                    </TextBox>
+                    <ToggleButton Height="29" VerticalAlignment="Top" HorizontalAlignment="Right" Width="29" BorderThickness="0 1 1 1"
+                                  IsChecked="{Binding ElementName=SearchDetailsExpander, Path=IsExpanded, UpdateSourceTrigger=PropertyChanged}"
+                                  ToolTip="Click for extra search details">
+                        <Image Source="/REghZyAccountManagerV6;component/Resources/preferencesIcon.png" Margin="2"/>
+                    </ToggleButton>
+                    <ListBox x:Name="FindList" 
+                             VerticalContentAlignment="Center" 
+                             IsTabStop="False"
+                             utils:HorizontalScrolling.UseHorizontalScrolling="True"
+                             Margin="0,29,0,30" 
+                             BorderThickness="1 0 1 1" 
+                             HorizontalContentAlignment="Stretch"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
+                             Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
+                             ItemsSource="{Binding FoundAccounts, Mode=OneTime}"
+                             SelectedItem="{Binding SelectedAccount, UpdateSourceTrigger=PropertyChanged}"
+                             ToolTip="Contains all of the found accounts. Double click a found account to select it in the main account list"
+                             FocusManager.IsFocusScope="True"
+                             ap:ListBoxTabSelectNextElement.Use="True">
+                        <ListBox.InputBindings>
+                            <KeyBinding Key="Enter" Command="{Binding SelectedAccount.SelectCommand, Mode=OneWay}"/>
+                        </ListBox.InputBindings>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <controls:SmallAccountControl DataContext="{Binding}" ContextMenu="{DynamicResource AccountContextMenu}">
+                                    <controls:SmallAccountControl.InputBindings>
+                                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding SelectCommand, Mode=OneTime}"/>
+                                        <KeyBinding Key="Enter" Command="{Binding SelectCommand, Mode=OneTime}"/>
+                                    </controls:SmallAccountControl.InputBindings>
+                                </controls:SmallAccountControl>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Button VerticalAlignment="Bottom" Height="30" Content="Clear" 
+                            BorderThickness="1 0 1 1"
+                            BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
+                            Command="{Binding ClearResultsCommand, Mode=OneTime}"/>
+                    <Expander VerticalAlignment="Top" VerticalContentAlignment="Center" Header="Search Options" HorizontalAlignment="Left" Width="181"
+                              ExpandDirection="Down" FlowDirection="RightToLeft" Margin="39,29,0,0"
+                              x:Name="SearchDetailsExpander">
+                        <Expander.Style>
+                            <Style TargetType="{x:Type Expander}">
+                                <Setter Property="Foreground" Value="{DynamicResource AREghZyBrush.Foreground.Static}" />
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="VerticalContentAlignment" Value="Stretch" />
+                                <Setter Property="BorderBrush" Value="Transparent" />
+                                <Setter Property="BorderThickness" Value="1" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Expander}">
+                                            <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" CornerRadius="3" SnapsToDevicePixels="true">
+                                                <DockPanel>
+                                                    <ToggleButton x:Name="HeaderSite" ContentTemplate="{TemplateBinding HeaderTemplate}"  
+                                                                  DockPanel.Dock="Top" 
+                                                                  Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" 
+                                                                  FocusVisualStyle="{StaticResource ExpanderHeaderFocusVisual}" FontStyle="{TemplateBinding FontStyle}" 
+                                                                  FontStretch="{TemplateBinding FontStretch}" FontSize="{TemplateBinding FontSize}" 
+                                                                  FontFamily="{TemplateBinding FontFamily}" 
+                                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                                                  IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                                  Margin="-1,-29,150,1" MinWidth="0" MinHeight="0" 
+                                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" Height="29"
+                                                                  BorderBrush="Transparent" Background="Transparent" BorderThickness="0" Visibility="Collapsed">
+                                                    </ToggleButton>
+                                                    <ContentPresenter x:Name="ExpandSite" DockPanel.Dock="Bottom" Focusable="false" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" Visibility="Collapsed" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                                                </DockPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsExpanded" Value="true">
+                                                    <Setter Property="Visibility" TargetName="ExpandSite" Value="Visible" />
+                                                </Trigger>
+                                                <Trigger Property="ExpandDirection" Value="Right">
+                                                    <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Right" />
+                                                    <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Left" />
+                                                    <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderRightHeaderStyle}" />
+                                                </Trigger>
+                                                <Trigger Property="ExpandDirection" Value="Up">
+                                                    <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Top" />
+                                                    <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Bottom" />
+                                                    <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderUpHeaderStyle}" />
+                                                </Trigger>
+                                                <Trigger Property="ExpandDirection" Value="Left">
+                                                    <Setter Property="DockPanel.Dock" TargetName="ExpandSite" Value="Left" />
+                                                    <Setter Property="DockPanel.Dock" TargetName="HeaderSite" Value="Right" />
+                                                    <Setter Property="Style" TargetName="HeaderSite" Value="{StaticResource ExpanderLeftHeaderStyle}" />
+                                                </Trigger>
+                                                <Trigger Property="IsEnabled" Value="false">
+                                                    <Setter Property="Foreground" Value="{DynamicResource AREghZyBrush.Foreground.Disabled}" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Expander.Style>
+                        <Border Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+                            <Border.BitmapEffect>
+                                <DropShadowBitmapEffect ShadowDepth="1"/>
+                            </Border.BitmapEffect>
+                            <StackPanel Margin="5"  FlowDirection="LeftToRight">
+                                <Label Height="20" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                    <TextBlock Text="Preferences"/>
+                                </Label>
+                                <CheckBox Content="Search contains" IsChecked="{Binding CheckContains, UpdateSourceTrigger=PropertyChanged}" 
+                                          ToolTip="True to check any account that contains the search text, otherwise only if it starts with it"/>
+                                <Separator Height="1"/>
+                                <Label Height="20" Padding="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+                                    <TextBlock Text="Search Type"/>
+                                </Label>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="42*"/>
+                                        <ColumnDefinition Width="2"/>
+                                        <ColumnDefinition Width="50*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Content="Select All"   Margin="0,1,0,1" Command="{Binding SelectAllCommand, Mode=OneTime}"/>
+                                    <Button Content="Deselect All"   Margin="0,1,0,1" Grid.Column="2" Command="{Binding DeselectAllCommand, Mode=OneTime}"/>
+                                </Grid>
+                                <CheckBox Content="Account Name"   Margin="0,1,0,1" IsChecked="{Binding SearchAccountName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Email"          Margin="0,1,0,1" IsChecked="{Binding SearchEmail, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Username"       Margin="0,1,0,1" IsChecked="{Binding SearchUsername, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Password"       Margin="0,1,0,1" IsChecked="{Binding SearchPassword, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Date of Birth"  Margin="0,1,0,1" IsChecked="{Binding SearchDateOfBirth, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Security Info"  Margin="0,1,0,1" IsChecked="{Binding SearchSecurityInfo, UpdateSourceTrigger=PropertyChanged}"/>
+                                <CheckBox Content="Custom Info"    Margin="0,1,0,1" IsChecked="{Binding SearchExtraInfo, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </Border>
+                    </Expander>
                 </Grid>
             </Grid>
         </Grid>

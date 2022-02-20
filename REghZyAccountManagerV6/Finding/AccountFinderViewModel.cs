@@ -65,6 +65,12 @@ namespace REghZyAccountManagerV6.Finding {
 
         public ObservableCollection<AccountViewModel> FoundAccounts { get; }
 
+        private AccountViewModel selectedAccount;
+        public AccountViewModel SelectedAccount { 
+            get => this.selectedAccount; 
+            set => RaisePropertyChanged(ref this.selectedAccount, value);
+        }
+
         public ICommand DoSearchCommand { get; }
 
         public ICommand ClearResultsCommand { get; }
@@ -72,6 +78,8 @@ namespace REghZyAccountManagerV6.Finding {
         public ICommand SelectAllCommand { get; }
 
         public ICommand DeselectAllCommand { get; }
+
+        public ICommand FocusListCommand { get; }
 
         public int Editions { get; private set; }
 
@@ -99,6 +107,13 @@ namespace REghZyAccountManagerV6.Finding {
                 SearchDateOfBirth = false;
                 SearchSecurityInfo = false;
                 SearchExtraInfo = false;
+            });
+
+            this.FocusListCommand = new RelayCommand(() => {
+                if (this.FoundAccounts.Count > 0) {
+                    ServiceLocator.FindView.FocusList();
+                    this.SelectedAccount = this.FoundAccounts[0];
+                }
             });
         }
 

@@ -53,7 +53,11 @@ namespace REghZyAccountManagerV6.Controls {
                 this.PART_Preview.Visibility = Visibility.Collapsed;
                 this.PART_Editor.Visibility = Visibility.Visible;
                 this.PART_Editor.Focus();
-                this.PART_Editor.SelectAll();
+
+                if (ServiceLocator.Settings.Settings.DoubleClickBoxSelectsAll) {
+                    this.PART_Editor.SelectAll();
+                }
+
                 this.preEditText = this.Text;
             }
             else {

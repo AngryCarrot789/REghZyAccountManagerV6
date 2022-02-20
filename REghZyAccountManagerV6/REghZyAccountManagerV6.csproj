@@ -80,6 +80,7 @@
     <Compile Include="Accounting\ExtraInfoViewModel.cs" />
     <Compile Include="Accounting\IO\AccountIO.cs" />
     <Compile Include="AttachedProperties\GridSplitterAttachedProperty.cs" />
+    <Compile Include="AttachedProperties\ListBoxTabSelectNextElement.cs" />
     <Compile Include="AttachedProperties\PasswordAttachedProperty.cs" />
     <Compile Include="AttachedProperties\SelectAllAttachedProperty.cs" />
     <Compile Include="AttachedProperties\TextHinting.cs" />
@@ -88,14 +89,13 @@
     <Compile Include="Controls\DoubleClickEditBox.xaml.cs">
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\NumberSelector.xaml.cs">
+      <DependentUpon>NumberSelector.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Converters\BoolToStringConverter.cs" />
     <Compile Include="Converters\ModificationColourConverter.cs" />
     <Compile Include="Finding\AccountFinderViewModel.cs" />
     <Compile Include="ServiceLocator.cs" />
-    <Compile Include="Settings\UserSettingsViewModel.cs" />
-    <Compile Include="Settings\UserSettingsWindow.xaml.cs">
-      <DependentUpon>UserSettingsWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Themes\Controls.xaml.cs" />
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="Themes\ThemeTypes.cs" />
@@ -104,6 +104,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\FileHelper.cs" />
+    <Compile Include="Utils\FolderPicker.cs" />
     <Compile Include="Utils\LinqTryCatch.cs" />
     <Compile Include="Utils\HorizontalScrolling.cs" />
     <Compile Include="Utils\ReaderUtils.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Views\IFindView.cs" />
     <Compile Include="Views\ILoginView.cs" />
     <Compile Include="Views\INewAccount.cs" />
+    <Compile Include="Views\ISettings.cs" />
     <Compile Include="Views\IView.cs" />
     <Compile Include="Views\Login\LoginViewModel.cs" />
     <Compile Include="Views\Login\LoginWindow.xaml.cs">
@@ -130,11 +132,18 @@
     <Compile Include="Views\NewAccounts\NewAccountWindow.xaml.cs">
       <DependentUpon>NewAccountWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Settings\UserSettingsViewModel.cs" />
+    <Compile Include="Views\Settings\UserSettingsWindow.xaml.cs">
+      <DependentUpon>UserSettingsWindow.xaml</DependentUpon>
+    </Compile>
     <Page Include="Accounting\Controls\LargeAccountControl.xaml" />
     <Page Include="Accounting\Controls\SharedControls.xaml" />
     <Page Include="Accounting\Controls\SmallAccountControl.xaml" />
     <Page Include="Controls\DoubleClickEditBox.xaml" />
-    <Page Include="Settings\UserSettingsWindow.xaml" />
+    <Page Include="Controls\NumberSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\ControlColours.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -168,6 +177,7 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\NewAccounts\NewAccountWindow.xaml" />
+    <Page Include="Views\Settings\UserSettingsWindow.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -205,6 +215,9 @@
     <Resource Include="Resources\loadDirectoryIcon.png" />
     <Resource Include="Resources\saveDirectoryIcon.png" />
     <Resource Include="Resources\showAccountIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\preferencesIcon.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

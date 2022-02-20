@@ -6,11 +6,11 @@ namespace REghZyAccountManagerV6.Views.Login {
     /// Interaction logic for LoginWindow.xaml
     /// </summary>
     public partial class LoginWindow : Window, ILoginView {
-        public static LoginWindow INSTANCE;
+        public static LoginWindow Instance { get; private set; }
 
         public LoginWindow() {
             InitializeComponent();
-            INSTANCE = this;
+            Instance = this;
             ServiceLocator.Login = this;
         }
 

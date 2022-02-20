@@ -47,13 +47,16 @@ namespace REghZyAccountManagerV6.Utils {
             return false;
         }
 
+        /// <summary>
+        /// Returns the full path of the given path's parent directory
+        /// </summary>
         public static string GetParent(string path) {
-            int index = path.LastIndexOf(Path.DirectorySeparatorChar);
-            if (index == -1) {
-                return path;
-            }
-
-            return path.Substring(0, index);
+            return Path.GetDirectoryName(path);
+            // int index = path.LastIndexOf(Path.DirectorySeparatorChar);
+            // if (index == -1) {
+            //     return path;
+            // }
+            // return path.Substring(0, index);
         }
     }
 }

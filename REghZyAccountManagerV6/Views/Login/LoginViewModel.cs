@@ -18,6 +18,7 @@ namespace REghZyAccountManagerV6.Views.Login {
             }
             catch(Exception e) {
                 MessageBox.Show(e.Message, "Error logging in");
+                Application.Current.Shutdown(0);
             }
         }
     }

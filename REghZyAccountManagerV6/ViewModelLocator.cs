@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using REghZy.MVVM.IoC;
 using REghZyAccountManagerV6.ViewModels;
 using REghZyAccountManagerV6.Views.MainView;
+using REghZyAccountManagerV6.Views.Settings;
 
 namespace REghZyAccountManagerV6 {
     public static class ViewModelLocator {
@@ -48,9 +49,15 @@ namespace REghZyAccountManagerV6 {
             private set => IoC.SetViewModel(value);
         }
 
+        public static UserSettingsViewModel Settings {
+            get => IoC.GetViewModel<UserSettingsViewModel>();
+            private set => IoC.SetViewModel(value);
+        }
+
         static ViewModelLocator() {
             Application = new ApplicationViewModel();
             MainView = Application.MainView;
+            Settings = Application.UserSettings;
         }
 
         // forces this class to be loaded, ensuring the application and main view models are loaded

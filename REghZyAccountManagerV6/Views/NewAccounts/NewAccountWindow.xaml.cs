@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using REghZy.MVVM.Commands;
 using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.Utils;
 
@@ -16,11 +17,17 @@ namespace REghZyAccountManagerV6.Views.NewAccounts {
             set => this.DataContext = value;
         }
 
+        public bool IsOpen => this.Visibility == Visibility.Visible;
+
+        public ICommand OpenViewCommand { get; }
+
+        public ICommand CloseViewCommand { get; }
+
         public NewAccountWindow() {
             InitializeComponent();
+            this.OpenViewCommand = new RelayCommand(this.OpenView);
+            this.CloseViewCommand = new RelayCommand(this.CloseView);
         }
-
-        public bool IsOpen => this.Visibility == Visibility.Visible;
 
         public void OpenView() {
             this.IsAccountValid = false;

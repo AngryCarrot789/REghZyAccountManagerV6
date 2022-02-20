@@ -4,24 +4,21 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Security.Principal;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Animation;
+using System.Windows.Input;
+using REghZy.MVVM.Commands;
 using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.Accounting.IO;
-using REghZyAccountManagerV6.AttachedProperties;
 using REghZyAccountManagerV6.Utils;
 using REghZyAccountManagerV6.ViewModels;
 using REghZyAccountManagerV6.Views.NewAccounts;
+using REghZyAccountManagerV6.Views.Settings;
 
 namespace REghZyAccountManagerV6.Views.MainView {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window {
-        public static string PATH = "C:\\Users\\kettl\\Documents\\IISExtended\\0x0000004TEMP\\NULL_ACCESS\\v6";
-
         private bool isEditorOpen;
         private const double EDITOR_WIDTH_CLOSE = 0;
         private const double EDITOR_WIDTH_OPEN = 375;
@@ -47,15 +44,16 @@ namespace REghZyAccountManagerV6.Views.MainView {
             //    directory = PATH;
             // }
 
-            ServiceLocator.AccountIO = new AccountIO(PATH);
+            ServiceLocator.AccountIO = new AccountIO(ViewModelLocator.Application.UserSettings.SaveDirectory);
+            ViewModelLocator.Application.OnConfigLoaded += ApplicationOnOnConfigLoaded;
 
-            ObservableCollection<AccountViewModel> accounts = ViewModelLocator.AccountCollection.Accounts;
+            ObservableCollection<AccountViewModel> acc = ViewModelLocator.AccountCollection.Accounts;
             IEnumerable<AccountModel> enumerable = ServiceLocator.AccountIO.ReadAccountsFromDisk((path, exception) => {
                 MessageBox.Show($"Failed to read account (at path {path}) to disk. Reason: {exception.Message}", "Error");
             });
 
             foreach(AccountModel model in enumerable.OrderBy(d => d.Position)) {
-                accounts.Add(model.ToViewModel());
+                acc.Add(model.ToViewModel());
             }
 
             // List<AccountModel> load = new List<AccountModel>();
@@ -71,13 +69,13 @@ namespace REghZyAccountManagerV6.Views.MainView {
             // string[] list_8 = File.ReadAllLines(Path.Combine(dir, "ExtInf3.txt"));
             // string[] list_9 = File.ReadAllLines(Path.Combine(dir, "ExtInf4.txt"));
             // string[] list_10 = File.ReadAllLines(Path.Combine(dir, "ExtInf5.txt"));
-            // 
+            //
             // void doAdd(ref AccountModel model, string element) {
             //     if (!string.IsNullOrEmpty(element)) {
             //         model.Data.Add(element);
             //     }
             // }
-            // 
+            //
             // for(int i = 0; i < list_0.Length; i++) {
             //     AccountModel model = new AccountModel();
             //     model.Position = i;
@@ -95,7 +93,7 @@ namespace REghZyAccountManagerV6.Views.MainView {
             //     doAdd(ref model, list_10[i]);
             //     load.Add(model);
             // }
-            // 
+            //
             // foreach (AccountModel model in load.OrderBy(d => d.Position)) {
             //     accounts.Add(model.ToViewModel());
             // }
@@ -109,10 +107,10 @@ namespace REghZyAccountManagerV6.Views.MainView {
             // window.ShowDialog();
         }
 
-        private void Application_OnConfigLoaded(Settings.UserSettingsViewModel settings) {
+        private void ApplicationOnOnConfigLoaded(UserSettingsViewModel settings) {
             string directory = ViewModelLocator.Application.UserSettings.SaveDirectory;
-            if (string.IsNullOrEmpty(directory)) {
-                directory = PATH;
+            if (directory == null) {
+                throw new NullReferenceException("Directory was null!");
             }
 
             ServiceLocator.AccountIO.Directory = directory;
@@ -132,6 +130,7 @@ namespace REghZyAccountManagerV6.Views.MainView {
                     e.Cancel = true;
                 });
 
+            // unnecessary tbh... but oh wel
             Application.Current.Shutdown(0);
         }
 
@@ -154,6 +153,15 @@ namespace REghZyAccountManagerV6.Views.MainView {
             }
 
             public bool IsOpen => this.window.isEditorOpen;
+            
+            public ICommand OpenViewCommand { get; }
+
+            public ICommand CloseViewCommand { get; }
+
+            public EditorViewWrapper() {
+                this.OpenViewCommand = new RelayCommand(this.OpenView);
+                this.CloseViewCommand = new RelayCommand(this.CloseView);
+            }
 
             public void CloseView() {
                 if (this.window.isEditorOpen) {
@@ -182,6 +190,10 @@ namespace REghZyAccountManagerV6.Views.MainView {
             public void FocusInput() {
                 this.window.FindInputBox.Focus();
                 this.window.FindInputBox.SelectAll();
+            }
+
+            public void FocusList() {
+                this.window.FindList.Focus();
             }
         }
 

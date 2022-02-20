@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:REghZyAccountManagerV6.Accounting.Controls" 
              xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Accounting"
              xmlns:converters="clr-namespace:REghZy.MVVM.Framework.Converters;assembly=REghZy.MVVM.Framework" 
-             xmlns:converters1="clr-namespace:REghZyAccountManagerV6.Converters" xmlns:controls="clr-namespace:REghZyAccountManagerV6.Controls"
+             xmlns:converters1="clr-namespace:REghZyAccountManagerV6.Converters" 
+             xmlns:controls="clr-namespace:REghZyAccountManagerV6.Controls"
              d:DataContext="{d:DesignInstance Type=accounting:AccountViewModel}"
              Background="Transparent"
              mc:Ignorable="d"
@@ -67,6 +68,5 @@
                 </DrawingBrush>
             </Rectangle.Fill>
         </Rectangle>
-
     </Grid>
 </UserControl>

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Input;
 using REghZy.MVVM.Commands;
 using REghZy.MVVM.ViewModels;
