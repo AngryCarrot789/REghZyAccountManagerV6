@@ -5,7 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:REghZyAccountManagerV6.Settings" 
         xmlns:app="clr-namespace:REghZyAccountManagerV6" 
-        xmlns:vms="clr-namespace:REghZyAccountManagerV6.ViewModels"
+        xmlns:vms="clr-namespace:REghZyAccountManagerV6.ViewModels" xmlns:controls="clr-namespace:REghZyAccountManagerV6.Controls"
         d:DataContext="{d:DesignInstance Type=local:UserSettingsViewModel}"
         mc:Ignorable="d"
         Title="UserSettingsWindow" Height="450" Width="800"
@@ -13,10 +13,18 @@
         DataContext="{Binding Source={x:Static app:ViewModelLocator.Application}, Path=UserSettings, UpdateSourceTrigger=PropertyChanged}">
     <Grid Margin="10">
         <StackPanel Margin="0,0,0,40">
-            <StackPanel>
+            <Grid Margin="0 0 0 5">
                 <Label Content="Save Directory"/>
-                <TextBox Text="{Binding SaveDirectory, UpdateSourceTrigger=Explicit}" Padding="4"/>
-            </StackPanel>
+                <TextBox Text="{Binding SaveDirectory, UpdateSourceTrigger=Explicit}" Padding="4" Margin="100,0,0,0"/>
+            </Grid>
+            <Grid Margin="0 0 0 5">
+                <Label Content="Window Width"/>
+                <controls:NumberSelector Value="{Binding WindowWidth, UpdateSourceTrigger=PropertyChanged}" Minimum="750" Maximum="3840" Margin="100,0,0,0"/>
+            </Grid>
+            <Grid Margin="0 0 0 5">
+                <Label Content="Window Height"/>
+                <controls:NumberSelector Value="{Binding WindowHeight, UpdateSourceTrigger=PropertyChanged}" Minimum="525" Maximum="2160" Margin="100,0,0,0"/>
+            </Grid>
         </StackPanel>
         <Grid Height="32" VerticalAlignment="Bottom">
             <Button Command="{Binding SaveToDiskCommand, Mode=OneTime}" Content="Save to disk" Margin="655,0,0,0"/>
