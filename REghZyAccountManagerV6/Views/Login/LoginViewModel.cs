@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using REghZy.MVVM.Commands;
@@ -9,7 +10,7 @@ namespace REghZyAccountManagerV6.Views.Login {
         public ICommand LoginCommand { get; }
 
         public LoginViewModel() {
-            this.LoginCommand = new RelayCommand(this.TryLogin);
+            this.LoginCommand = new RelayCommand(TryLogin);
         }
 
         private void TryLogin() {
@@ -18,7 +19,7 @@ namespace REghZyAccountManagerV6.Views.Login {
             }
             catch(Exception e) {
                 MessageBox.Show(e.Message, "Error logging in");
-                Application.Current.Shutdown(0);
+                Debug.WriteLine(e.ToString());
             }
         }
     }
