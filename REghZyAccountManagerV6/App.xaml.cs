@@ -81,11 +81,6 @@ namespace REghZyAccountManagerV6 {
             this.MainWindow.Show();
 
             this.ShutdownMode = ShutdownMode.OnMainWindowClose;
-
-            // Doesn't work properly :(
-            IoC.AccountActivity.Message = "Loading accounts...";
-            IoC.AccountActivity.IsVisible = true;
-
             await this.LoadAccounts();
         }
 

@@ -52,8 +52,6 @@ namespace REghZyAccountManagerV6.Views.MainView {
             }
 
             try {
-                IoC.AccountActivity.IsVisible = true;
-                IoC.AccountActivity.Message = "Loading accounts..";
                 ObservableCollection<AccountViewModel> list = ViewModelLocator.AccountCollection.Accounts;
                 IEnumerable<AccountModel> enumerable = IoC.Database.ReadAccounts();
                 list.Clear();
@@ -64,10 +62,6 @@ namespace REghZyAccountManagerV6.Views.MainView {
             catch (Exception e) {
                 Debug.WriteLine(e);
                 await IoC.MessageDialogs.ShowMessageAsync("Failed to read accounts", e.Message);
-            }
-            finally {
-                IoC.AccountActivity.IsVisible = false;
-                IoC.AccountActivity.Message = "";
             }
         }
 
@@ -93,18 +87,12 @@ namespace REghZyAccountManagerV6.Views.MainView {
 
             IEnumerable<AccountModel> modified = ViewModelLocator.AccountCollection.AccountModels;
             try {
-                IoC.AccountActivity.IsVisible = true;
-                IoC.AccountActivity.Message = "Saving accounts";
                 IoC.Database.WriteAccounts(modified);
                 ViewModelLocator.AccountCollection.MarkNoneModified();
             }
             catch (Exception e) {
                 Debug.WriteLine(e);
                 await IoC.MessageDialogs.ShowMessageAsync("Failed to write accounts", e.ToString());
-            }
-            finally {
-                IoC.AccountActivity.IsVisible = false;
-                IoC.AccountActivity.Message = "";
             }
         }
 
