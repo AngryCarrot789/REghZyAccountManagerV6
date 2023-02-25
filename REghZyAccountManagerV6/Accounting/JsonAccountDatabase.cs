@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using REghZy.Utils;
 using REghZyAccountManagerV6.Core;
 using REghZyAccountManagerV6.Core.Accounting;
 using REghZyAccountManagerV6.Core.Accounting.Storage;
@@ -22,6 +20,46 @@ namespace REghZyAccountManagerV6.Accounting {
             serializer.Formatting = Formatting.Indented;
         }
 
+        private static string ToString(object obj, string def) {
+            return obj != null ? obj.ToString() : "";
+        }
+
+        public static AccountModel ReadAccount(string filePath) {
+            using (JsonReader reader = new JsonTextReader(new StreamReader(File.OpenRead(filePath)))) {
+                Dictionary<string, object> dictionary;
+                try {
+                    dictionary = serializer.Deserialize<Dictionary<string, object>>(reader);
+                }
+                catch (Exception e) {
+                    throw new StorageReadException("Failed to deserialise json to a dictionary", e);
+                }
+
+                if (dictionary != null && dictionary.TryGetValue("IsRealAccount", out object isRealAccount) && "Yes!".Equals(isRealAccount)) {
+                    AccountModel model = new AccountModel();
+                    try {
+                        model.Position = int.Parse(ToString(dictionary["Position"], ""));
+                        model.AccountName = ToString(dictionary["AccountName"], "");
+                        model.Email = ToString(dictionary["Email"], "");
+                        model.Username = ToString(dictionary["Username"], "");
+                        model.Password = ToString(dictionary["Password"], "");
+                        model.DateOfBirth = ToString(dictionary["DateOfBirth"], "");
+                        model.SecurityInfo = ToString(dictionary["SecurityInfo"], "");
+                        model.CreationTime = new DateTime(long.Parse(ToString(dictionary["CreationTime"], "")));
+                        model.LastModifiedTime = new DateTime(long.Parse(ToString(dictionary["LastModifiedTime"], "")));
+                        model.CustomInfo = string.Join("\n", ((JArray) dictionary["CustomInfo"]).ToObject<List<string>>() ?? throw new Exception());
+                    }
+                    catch (Exception e) {
+                        throw new StorageReadException("Failed to parse deserialised json into AccountModel", e);
+                    }
+
+                    return model;
+                }
+                else {
+                    throw new StorageReadException("Invalid json account file");
+                }
+            }
+        }
+
         public IEnumerable<AccountModel> ReadAccounts() {
             if (string.IsNullOrEmpty(AccountDirectory) || !Directory.Exists(AccountDirectory)) {
                 throw new StorageUnavailableException("Account directory does not exist: " + AccountDirectory);
@@ -29,36 +67,10 @@ namespace REghZyAccountManagerV6.Accounting {
 
             List<AccountModel> accounts = new List<AccountModel>();
             foreach (string file in Directory.EnumerateFiles(AccountDirectory)) {
-                using (JsonReader reader = new JsonTextReader(new StreamReader(File.OpenRead(file)))) {
-                    Dictionary<string, object> dictionary;
-                    try {
-                        dictionary = serializer.Deserialize<Dictionary<string, object>>(reader);
-                    }
-                    catch {
-                        continue;
-                    }
-
-                    if (dictionary != null && dictionary.TryGetValue("IsRealAccount", out object isRealAccount) && "Yes!".Equals(isRealAccount)) {
-                        AccountModel model = new AccountModel();
-                        try {
-                            model.Position = int.Parse(dictionary["Position"].ToString());
-                            model.AccountName = dictionary["AccountName"].ToString();
-                            model.Email = dictionary["Email"].ToString();
-                            model.Username = dictionary["Username"].ToString();
-                            model.Password = dictionary["Password"].ToString();
-                            model.DateOfBirth = dictionary["DateOfBirth"].ToString();
-                            model.SecurityInfo = dictionary["SecurityInfo"].ToString();
-                            model.CreationTime = new DateTime(long.Parse(dictionary["CreationTime"].ToString()));
-                            model.LastModifiedTime = new DateTime(long.Parse(dictionary["LastModifiedTime"].ToString()));
-                            model.CustomInfo = string.Join("\n", ((JArray) dictionary["CustomInfo"]).ToObject<List<string>>() ?? throw new Exception());
-                        }
-                        catch {
-                            continue;
-                        }
-
-                        accounts.Add(model);
-                    }
+                try {
+                    accounts.Add(ReadAccount(file));
                 }
+                catch { }
             }
 
             return accounts;
@@ -87,12 +99,12 @@ namespace REghZyAccountManagerV6.Accounting {
                     try {
                         dictionary["IsRealAccount"] = "Yes!";
                         dictionary["Position"] = account.Position;
-                        dictionary["AccountName"] = account.AccountName;
-                        dictionary["Email"] = account.Email;
-                        dictionary["Username"] = account.Username;
-                        dictionary["Password"] = account.Password;
-                        dictionary["DateOfBirth"] = account.DateOfBirth;
-                        dictionary["SecurityInfo"] = account.SecurityInfo;
+                        dictionary["AccountName"] = account.AccountName ?? "";
+                        dictionary["Email"] = account.Email ?? "";
+                        dictionary["Username"] = account.Username ?? "";
+                        dictionary["Password"] = account.Password ?? "";
+                        dictionary["DateOfBirth"] = account.DateOfBirth ?? "";
+                        dictionary["SecurityInfo"] = account.SecurityInfo ?? "";
                         dictionary["CreationTime"] = account.CreationTime.Ticks;
                         dictionary["LastModifiedTime"] = account.LastModifiedTime.Ticks;
                         dictionary["CustomInfo"] = string.IsNullOrEmpty(account.CustomInfo) ? new List<string>() : account.CustomInfo.Split('\n').ToList();
@@ -165,7 +177,8 @@ namespace REghZyAccountManagerV6.Accounting {
 
         public static string Repeat(char ch, int count) {
             char[] array = new char[count];
-            Arrays.Fill(array, ch);
+            for (int i = 0; i < count; i++)
+                array[i] = ch;
             return new string(array);
         }
     }

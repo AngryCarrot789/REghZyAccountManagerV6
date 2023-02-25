@@ -60,7 +60,7 @@ namespace REghZyAccountManagerV6.Accounting {
         }
 
         public static string ToString(object obj, string def) {
-            return obj != null ? obj.ToString() : "";
+            return obj != null ? obj.ToString() : def;
         }
 
         public void WriteAccounts(IEnumerable<AccountModel> models) {

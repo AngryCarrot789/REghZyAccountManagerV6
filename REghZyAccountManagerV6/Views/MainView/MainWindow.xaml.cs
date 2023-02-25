@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.Core;
 using REghZyAccountManagerV6.Core.Accounting;
 using REghZyAccountManagerV6.Core.Config;
@@ -88,37 +89,19 @@ namespace REghZyAccountManagerV6.Views.MainView {
 
         private List<AccountModel> accounts;
         private void ListBox_DragEnter(object sender, DragEventArgs e) {
-            if (e.Data.GetData(DataFormats.FileDrop) is string[] paths) {
-                this.accounts = new List<AccountModel>(paths.Length);
-                foreach(string path in paths) {
-                    // if it doesn't exist, or is bigger than 64K, then ignore it
-                    if (!File.Exists(path) || new FileInfo(path).Length > 65535) {
-                        continue;
-                    }
-
-                    try {
-                        AccountModel model = new AccountModel();
-                        using (FileStream stream = File.OpenRead(path)) {
-                            stream.Seek(0, SeekOrigin.Begin);
-                            // inefficient reading, but only for the preamble
-                            StreamReader reader = new StreamReader(new BufferedStream(stream, 128));
-                            string preamble = reader.ReadBlock(AccountIO.PREAMBLE.Length);
-                            if (preamble == null || preamble != AccountIO.PREAMBLE) {
-                                continue;
-                            }
-
+            if (IoC.Database is JsonAccountDatabase database) {
+                if (e.Data.GetData(DataFormats.FileDrop) is string[] paths) {
+                    this.accounts = new List<AccountModel>(paths.Length);
+                    foreach (string path in paths) {
+                        // if it doesn't exist, or is bigger than 64K, then ignore it
+                        if (File.Exists(path) && Path.GetExtension(path) == ".json" && new FileInfo(path).Length <= 65535) {
                             try {
-                                AccountIO.ReadAccountFromReader_OLD(ref model, reader, false);
+                                this.accounts.Add(JsonAccountDatabase.ReadAccount(path));
                             }
-                            catch(Exception fail) { // may not be a valid account file, so ignore it
-                                continue;
+                            catch (Exception ee) {
+                                MessageBox.Show($"Failed to read file at path '{path}'. Reason: {ee.Message}", "Error reading file");
                             }
-
-                            this.accounts.Add(model);
                         }
-                    }
-                    catch(Exception ee) {
-                        MessageBox.Show($"Failed to read file at path '{path}'. Reason: {ee.Message}", "Error reading file");
                     }
                 }
             }

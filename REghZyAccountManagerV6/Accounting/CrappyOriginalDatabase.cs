@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using REghZyAccountManagerV6.Core.Accounting;
 using REghZyAccountManagerV6.Core.Accounting.Storage;
+using REghZyAccountManagerV6.Core.Config;
 
 namespace REghZyAccountManagerV6.Accounting {
     public class CrappyOriginalDatabase : IAccountDatabase {
@@ -32,11 +33,37 @@ namespace REghZyAccountManagerV6.Accounting {
         }
 
         public void WriteAccounts(IEnumerable<AccountModel> models) {
-            throw new NotImplementedException();
+            foreach (AccountModel item in models) {
+                try {
+                    string path = Path.Combine(Configuration.AccountSaveFile, item.AccountName) + ".txt";
+                    using (StreamWriter writer = new StreamWriter(new BufferedStream(File.OpenWrite(path), 1024))) {
+                        WriteAccountToWriter(item, writer);
+                    }
+                }
+                catch (Exception e) {
+
+                }
+            }
         }
 
         public bool DeleteUser(string accountName) {
-            throw new NotImplementedException();
+            return true;
+        }
+
+        public static void WriteAccountToWriter(AccountModel account, TextWriter writer) {
+            writer.WriteLine("ThisIsAnActualAccount");
+            writer.WriteLine(account.Position);
+            writer.WriteLine(account.AccountName);
+            writer.WriteLine(account.Email);
+            writer.WriteLine(account.Username);
+            writer.WriteLine(account.Password);
+            writer.WriteLine(account.DateOfBirth);
+            writer.WriteLine(account.SecurityInfo);
+            if (!string.IsNullOrEmpty(account.CustomInfo)) {
+                foreach (string line in account.CustomInfo.Split('\n')) {
+                    writer.WriteLine(line);
+                }
+            }
         }
 
         public static void ReadAccountFromReader_OLD(ref AccountModel account, TextReader reader, bool readPreamble = true) {

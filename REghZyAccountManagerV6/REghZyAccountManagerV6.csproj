@@ -39,18 +39,6 @@
       <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationFramework.Aero2" />
-    <Reference Include="REghZy.MVVM">
-      <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.MVVM.Framework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\REghZy\DLL\REghZy.MVVM.Framework.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.Streams">
-      <HintPath>..\..\REghZy\DLL\REghZy.Streams.dll</HintPath>
-    </Reference>
-    <Reference Include="REghZy.Utils">
-      <HintPath>..\..\REghZy\DLL\REghZy.Utils.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
