@@ -1,21 +1,25 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ContextMenu x:Key="AccountContextMenu" x:Shared="true">
-        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an" ToolTip="Copies the Account Name to your computer's clipboard"/>
-        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e" ToolTip="Copies the Email to your computer's clipboard"/>
-        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u" ToolTip="Copies the Username to your computer's clipboard"/>
-        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p" ToolTip="Copies the Password to your computer's clipboard"/>
-        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" ToolTip="Copies the Date of Birth to your computer's clipboard"/>
-        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" ToolTip="Copies the Security Info to your computer's clipboard"/>
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Core.Accounting;assembly=REghZyAccountManagerV6.Core"
+                    mc:Ignorable="d">
+    <ContextMenu x:Key="AccountContextMenu" x:Shared="true" d:DataContext="{d:DesignInstance accounting:AccountViewModel}">
+        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="0" ToolTip="Copies the Account Name to your computer's clipboard"/>
+        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="1" ToolTip="Copies the Email to your computer's clipboard"/>
+        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="2" ToolTip="Copies the Username to your computer's clipboard"/>
+        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="3" ToolTip="Copies the Password to your computer's clipboard"/>
+        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="4" ToolTip="Copies the Date of Birth to your computer's clipboard"/>
+        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="5" ToolTip="Copies the Security Info to your computer's clipboard"/>
+        <MenuItem Header="Copy Custom Info"   Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="6" ToolTip="Copies the custom info to your computer's clipboard"/>
     </ContextMenu>
 
-    <ContextMenu x:Key="DeletableAccountContextMenu" x:Shared="true">
-        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="an" ToolTip="Copies the Account Name to your computer's clipboard"/>
-        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e" ToolTip="Copies the Email to your computer's clipboard"/>
-        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u" ToolTip="Copies the Username to your computer's clipboard"/>
-        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p" ToolTip="Copies the Password to your computer's clipboard"/>
-        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" ToolTip="Copies the Date of Birth to your computer's clipboard"/>
-        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" ToolTip="Copies the Security Info to your computer's clipboard"/>
+    <ContextMenu x:Key="DeletableAccountContextMenu" x:Shared="true" d:DataContext="{d:DesignInstance accounting:AccountViewModel}">
+        <MenuItem Header="Copy Account Name"  Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="0" ToolTip="Copies the Account Name to your computer's clipboard"/>
+        <MenuItem Header="Copy Email"         Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="1" ToolTip="Copies the Email to your computer's clipboard"/>
+        <MenuItem Header="Copy Username"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="2" ToolTip="Copies the Username to your computer's clipboard"/>
+        <MenuItem Header="Copy Password"      Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="3" ToolTip="Copies the Password to your computer's clipboard"/>
+        <MenuItem Header="Copy Date of Birth" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="4" ToolTip="Copies the Date of Birth to your computer's clipboard"/>
+        <MenuItem Header="Copy Security Info" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="5" ToolTip="Copies the Security Info to your computer's clipboard"/>
+        <MenuItem Header="Copy Custom Info"   Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="6" ToolTip="Copies the custom info to your computer's clipboard"/>
         <Separator Style="{DynamicResource MenuItemSeparator}"/>
         <MenuItem Header="Delete" Command="{Binding DeleteCommand, Mode=OneTime}" BorderBrush="#FFDC1E1E" BorderThickness="1" ToolTip="Deletes this account from the account list, and also deletes the file. This action is undoable with the undo button in the account panel" Background="#FF851414"/>
     </ContextMenu>

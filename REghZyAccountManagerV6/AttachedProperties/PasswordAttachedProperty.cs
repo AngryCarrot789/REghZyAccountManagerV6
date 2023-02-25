@@ -12,18 +12,10 @@ namespace REghZyAccountManagerV6.AttachedProperties {
                 new FrameworkPropertyMetadata(false, PropertyChangedCallback));
 
         private static void PropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            if (e.NewValue == e.OldValue) {
-                return;
-            }
-
             if (d is PasswordBox box) {
-                if ((bool) e.NewValue) {
-                    // just in case...
-                    box.PasswordChanged -= BoxOnPasswordChanged;
+                box.PasswordChanged -= BoxOnPasswordChanged;
+                if (e.NewValue != null && (bool) e.NewValue) {
                     box.PasswordChanged += BoxOnPasswordChanged;
-                }
-                else {
-                    box.PasswordChanged -= BoxOnPasswordChanged;
                 }
             }
             else {

@@ -25,11 +25,18 @@ namespace REghZyAccountManagerV6.Utils {
 
         // for WPF support
         public bool? ShowDialog(Window owner = null, bool throwOnError = false) {
+            IntPtr window = IntPtr.Zero;
             if (owner == null) {
-                owner = Application.Current.MainWindow;
+                if ((window = GetActiveWindow()) == IntPtr.Zero) {
+                    owner = Application.Current.MainWindow;
+                }
             }
 
-            return this.ShowDialog(owner != null ? new WindowInteropHelper(owner).Handle : IntPtr.Zero, throwOnError);
+            if (window == IntPtr.Zero && owner != null) {
+                window = new WindowInteropHelper(owner).Handle;
+            }
+
+            return this.ShowDialog(window, throwOnError);
         }
 
         // for all .NET
@@ -105,6 +112,9 @@ namespace REghZyAccountManagerV6.Utils {
 
         [DllImport("user32")]
         private static extern IntPtr GetDesktopWindow();
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetActiveWindow();
 
         private const int ERROR_CANCELLED = unchecked((int) 0x800704C7);
 

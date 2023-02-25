@@ -17,7 +17,7 @@ namespace REghZyAccountManagerV6.AttachedProperties {
                 control.SetValue(ShowWhenFocusedProperty, value);
             }
 
-            throw new ArgumentException("Control was not a textbox", "control");
+            throw new ArgumentException("Control was not a textbox", nameof(control));
         }
 
         public static bool GetShowWhenFocused(Control control) {
@@ -25,7 +25,7 @@ namespace REghZyAccountManagerV6.AttachedProperties {
                 return (bool) control.GetValue(ShowWhenFocusedProperty);
             }
 
-            throw new ArgumentException("Control was not a textbox", "control");
+            throw new ArgumentException("Control was not a textbox", nameof(control));
         }
     }
 }

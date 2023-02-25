@@ -10,7 +10,8 @@
         xmlns:utils="clr-namespace:REghZyAccountManagerV6.Utils"
         xmlns:ap="clr-namespace:REghZyAccountManagerV6.AttachedProperties" 
         xmlns:ctrls="clr-namespace:REghZyAccountManagerV6.Controls"
-        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
+        xmlns:core="clr-namespace:REghZyAccountManagerV6.Core;assembly=REghZyAccountManagerV6.Core"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="MainWindow" 
         Width="1280" 
@@ -18,18 +19,21 @@
         MinWidth="750"
         MinHeight="525"
         Style="{DynamicResource CustomWindowStyle}"
-        DataContext="{x:Static app:ViewModelLocator.MainView}" 
+        d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Window.InputBindings>
         <KeyBinding Command="{Binding FocusFindCommand, Mode=OneTime}" Modifiers="Ctrl" Key="F"/>
     </Window.InputBindings>
     <Window.Resources>
-        <converters:BoolToStringConverter x:Key="BoolToStringConverter" />
+        <converters:BoolConverter x:Key="BoolToStringConverter" TrueValue="Close Editor" FalseValue="Open Editor"/>
     </Window.Resources>
     <Grid>
         <Menu VerticalAlignment="Top">
             <MenuItem Header="File">
-                <MenuItem Header="Preferences..." Command="{Binding Source={x:Static app:ServiceLocator.Settings}, Path=OpenViewCommand, Mode=OneTime}">
+                <MenuItem Header="Load" Command="{Binding LoadAccountsCommand, Mode=OneTime}"/>
+                <MenuItem Header="Save" Command="{Binding SaveAccountsCommand, Mode=OneTime}"/>
+                <Separator Style="{StaticResource MenuItemSeparator}"/>
+                <MenuItem Header="Preferences..." Command="{Binding OpenPreferencesCommand, Mode=OneTime}">
                     <MenuItem.Icon>
                         <Image Source="/REghZyAccountManagerV6;component/Resources/preferencesIcon.png"/>
                     </MenuItem.Icon>
@@ -38,7 +42,7 @@
         </Menu>
         <Grid Margin="10,18,0,10">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220" MinWidth="200"/>
+                <ColumnDefinition Width="220" x:Name="PanelColumn"/>
                 <ColumnDefinition Width="10"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -48,29 +52,33 @@
             <ContentControl Height="40" VerticalAlignment="Top" Grid.Column="2">
                 <TextBlock Text="Account list and editor" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="14" TextDecorations="Underline"/>
             </ContentControl>
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"/>
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent"
+                          ap:GridLatchSplitter.IsEnabled="True"
+                          ap:GridLatchSplitter.ClosedSize="0"
+                          ap:GridLatchSplitter.ThresholdSizeToClose="70"
+                          ap:GridLatchSplitter.ThresholdSizeToOpen="150"
+                          ap:GridLatchSplitter.MinimumSize="220"
+                          ap:GridLatchSplitter.IsHorizontalCloseDirectionLeft="True"
+                          ap:GridLatchSplitter.TargetColumn="{Binding ElementName=PanelColumn, Mode=OneTime}"/>
             <Grid Grid.Column="2" Margin="0,40,0,0">
                 <Grid Height="40" VerticalAlignment="Bottom" DataContext="{Binding Panel, Mode=OneTime}" Margin="0,0,10,0">
                     <TextBlock HorizontalAlignment="Left" Width="95" VerticalAlignment="Center" TextAlignment="Center"><Run Text="Move selected"/><LineBreak/><Run Text="account position"/></TextBlock>
-                    <Button Command="{Binding MoveItemUpCommand, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="UP" Margin="100,0,0,0" Width="55"/>
-                    <Button Command="{Binding MoveItemDownCommand, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="DOWN" Margin="160,0,0,0" Width="55"/>
-                    <Button Command="{Binding MoveItemToTop, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="To Top" Margin="220,0,0,0" Width="75"/>
-                    <Button Command="{Binding MoveItemToBottom, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="To Bottom" Margin="300,0,0,0" Width="75"/>
-                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" DataContext="{x:Static app:ViewModelLocator.AccountCollection}" Margin="0,0,0,0">
+                    <Button BorderThickness="1 1 1 1" Command="{Binding MoveItemUpCommand, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="UP" Margin="100,0,0,20" Width="55"/>
+                    <Button BorderThickness="1 0 1 1" Command="{Binding MoveItemDownCommand, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="DOWN" Margin="100,0,0,0" Width="55" Height="20"/>
+                    <Button BorderThickness="1 1 1 1" Command="{Binding MoveItemToTop, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Stretch" Content="To Top" Margin="160,0,0,20" Width="75"/>
+                    <Button BorderThickness="1 0 1 1" Command="{Binding MoveItemToBottom, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="To Bottom" Margin="160,0,0,0" Width="75" Height="20"/>
+                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" DataContext="{x:Static core:ViewModelLocator.AccountCollection}" Margin="0,0,0,0">
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding Accounts.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Accounts"/></TextBlock>
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding SaveQueueCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Queued for save"/></TextBlock>
                     </StackPanel>
-
-                    <ctrls:NumberSelector x:Name="Ok" NormalIncrement="4" Minimum="50" Maximum="65" Value="55" Margin="380,0,0,0" HorizontalAlignment="Left" Width="100" Height="24" VerticalAlignment="Bottom"/>
-                    <TextBlock Text="{Binding ElementName=Ok, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="485,0,0,0" HorizontalAlignment="Left" Width="100" Height="24" VerticalAlignment="Bottom"/>
+                    <Slider Value="4" BorderThickness="1 0 1 1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="240,0,0,10" Width="75" Height="20" Style="{DynamicResource AbletonLiveSlider}"/>
+                    <TextBlock x:Name="ActivityStatus" Text="" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" FontFamily="Consolas" Margin="315,0,100,0"/>
                 </Grid>
                 <Grid Margin="0,0,0,50" DataContext="{Binding Collection, Mode=OneTime}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="10"/>
-                        <ColumnDefinition Width="{Binding Path=EditorWidth, Source={x:Static app:ViewModelLocator.AccountEditor}, UpdateSourceTrigger=PropertyChanged}"
-                                          x:Name="EditorColumn" 
-                                          MaxWidth="750"/>
+                        <ColumnDefinition Width="375" MaxWidth="750" x:Name="EditorColumn"/>
                     </Grid.ColumnDefinitions>
                     <Grid x:Name="EditorView" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,10,0">
                         <Grid DataContext="{Binding SelectedAccount, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
@@ -88,86 +96,63 @@
                                 <Grid Margin="0,0,0,148" Height="32" VerticalAlignment="Bottom">
                                     <Label VerticalContentAlignment="Center" FontSize="14" Content="Email" HorizontalAlignment="Left" Width="80"/>
                                     <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="e" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="1" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,111" Height="32" VerticalAlignment="Bottom">
                                     <Label VerticalContentAlignment="Center" FontSize="14" Content="Username" HorizontalAlignment="Left" Width="80"/>
                                     <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Username, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="u" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="2" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,74" Height="32" VerticalAlignment="Bottom">
                                     <Label VerticalContentAlignment="Center" FontSize="14" Content="Password" HorizontalAlignment="Left" Width="80"/>
                                     <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="p" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="3" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
                                 </Grid>
                                 <Grid Margin="0,0,0,37" Height="32" VerticalAlignment="Bottom">
                                     <Label VerticalContentAlignment="Center" FontSize="14" Content="D.O.B" HorizontalAlignment="Left" Width="80"/>
                                     <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding DateOfBirth, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="dob" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="4" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
                                 </Grid>
                                 <Grid Height="32" VerticalAlignment="Bottom">
                                     <Label VerticalContentAlignment="Center" FontSize="14" Content="Security" HorizontalAlignment="Left" Width="80"/>
                                     <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding SecurityInfo, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding SecurityInfo, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="si" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
+                                    <Button Content="Copy" FontSize="14" Command="{Binding CopyToClipboardCommand, Mode=OneTime}" CommandParameter="5" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
                                 </Grid>
                             </Grid>
                             <Separator VerticalAlignment="Top" Margin="10,227,0,0" Background="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"/>
                             <Grid Margin="0,233,0,0">
                                 <Label Content="Custom Information" VerticalAlignment="Top" HorizontalContentAlignment="Center"/>
-                                <Grid Margin="0,31,0,0" DataContext="{Binding ExtraInfo, Mode=OneTime}">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="27"/>
-                                        <RowDefinition Height="1*"/>
-                                    </Grid.RowDefinitions>
-                                    <TextBox Text="{Binding ToAdd, UpdateSourceTrigger=PropertyChanged}"
-                                             Tag="Add custom data here..." BorderThickness="1 1 1 1" 
-                                             VerticalContentAlignment="Center" Margin="0,0,190,0" Padding="3 1 1 1" 
-                                             Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"
-                                             BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
-                                             Style="{StaticResource HintedTextBox}">
-                                        <TextBox.InputBindings>
-                                            <KeyBinding Command="{Binding AddItemCommand, Mode=OneTime}" Key="Enter"/>
-                                        </TextBox.InputBindings>
-                                    </TextBox>
-                                    <Border Margin="0,26,150,0" BorderThickness="1 0" 
-                                            BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"
-                                            Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" Visibility="Collapsed"/>
-                                    <Button Command="{Binding AddItemCommand, Mode=OneTime}" Content="Add" Margin="0,0,125,0" BorderThickness="0 1 0 1" HorizontalAlignment="Right" Width="65" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" ToolTip="Adds the text (on the left) into the list below"/>
-                                    <Button Command="{Binding RemoveItemCommand, Mode=OneTime}" Content="Remove" BorderThickness="1 1 0 1" HorizontalAlignment="Right" Width="70" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" Margin="0,0,55,0" ToolTip="Removes the selected element below"/>
-                                    <Button Command="{Binding PasteItemCommand, Mode=OneTime}" Content="Paste" BorderThickness="1 1 1 1" HorizontalAlignment="Right" Width="55" BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}" ToolTip="Adds the text (in your clipboard) into the list below"/>
-                                    <ListBox Grid.Row="1" 
+                                <Grid Margin="0,31,0,0">
+                                    <TextBox Grid.Row="1" Padding="5" TextWrapping="NoWrap"
                                              BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
                                              Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"
-                                             BorderThickness="1 0 1 1" 
-                                             ItemsSource="{Binding ExtraInformation, Mode=OneTime}"
-                                             SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged}"
+                                             BorderThickness="1"
+                                             Text="{Binding CustomInfo, UpdateSourceTrigger=PropertyChanged}"
                                              HorizontalContentAlignment="Stretch"
-                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                             utils:HorizontalScrolling.UseHorizontalScrolling="True"
+                                             utils:HorizontalScrolling.HorizontalScrollAmount="3"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                             AcceptsReturn="True"
+                                             AcceptsTab="True"
+                                             FontSize="14"
                                              ToolTip="A list of extra/custom data you can associate with this account. Double click to edit existing items (similar to renaming files in windows). The text editor may be slightly glitchy with lots of continuous characters without whitespaces, due to text wrapping">
-                                        <ListBox.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Background="Transparent">
-                                                    <Grid.InputBindings>
-                                                        <KeyBinding Key="C" Modifiers="Ctrl" Command="{Binding CopyToClipboard, Mode=OneTime}"/>
-                                                    </Grid.InputBindings>
-                                                    <ctrls:DoubleClickEditBox x:Name="DCEB" VerticalAlignment="Bottom" Height="27" Grid.Row="0" Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}" MinHeight="30" Margin="-5,-2,47,-2"/>
-                                                    <Button Content="Copy" Command="{Binding CopyToClipboard, Mode=OneTime}" Margin="0,0,-3,0" HorizontalAlignment="Right" Width="49"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListBox.ItemTemplate>
-                                    </ListBox>
+                                    </TextBox>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <!--
-                    <ctrls:AutoClosingGridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Grid.Column="1"
-                               MinSizeForAutoClose="350"
-                               TargetDefinition="{Binding ., ElementName=EditorColumn}"
-                               IsOpen="{Binding IsEditorOpen, Source={x:Static app:ViewModelLocator.AccountPanel}, UpdateSourceTrigger=PropertyChanged}"/>
-                    -->
-                    <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" Grid.Column="1"
-                                  MouseDoubleClick="GridSplitter_MouseDoubleClick"/>
+                    <GridSplitter HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                                  Background="Transparent"
+                                  Grid.Column="1"
+                                  ap:GridLatchSplitter.IsEnabled="True"
+                                  ap:GridLatchSplitter.ClosedSize="0"
+                                  ap:GridLatchSplitter.ThresholdSizeToClose="125"
+                                  ap:GridLatchSplitter.ThresholdSizeToOpen="225"
+                                  ap:GridLatchSplitter.MinimumSize="350"
+                                  ap:GridLatchSplitter.IsHorizontalCloseDirectionLeft="False"
+                                  ap:GridLatchSplitter.TargetColumn="{Binding ElementName=EditorColumn, Mode=OneTime}"
+                                  ap:GridLatchSplitter.IsOpen="{Binding Source={x:Static core:ViewModelLocator.AccountPanel}, Path=IsEditorOpen, UpdateSourceTrigger=PropertyChanged}"/>
                     <Grid>
                         <Border Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}" BorderThickness="1" 
                                 BorderBrush="{DynamicResource AREghZyBrush.Deep.2.Border.Static}">
@@ -212,12 +197,12 @@
                     </StackPanel>
                 </Button>
                 <Button Command="{Binding UndoLastDeletionCommand, Mode=OneTime}" Content="Undo" HorizontalContentAlignment="Center" Margin="0,55,0,0" 
-                        IsEnabled="{Binding Path=CanUndo, Source={x:Static app:ViewModelLocator.AccountCollection}, UpdateSourceTrigger=PropertyChanged}" 
+                        IsEnabled="{Binding Path=CanUndo, Source={x:Static core:ViewModelLocator.AccountCollection}, UpdateSourceTrigger=PropertyChanged}"
                         Height="50" VerticalAlignment="Top" HorizontalAlignment="Left" Width="50"/>
                 <ToggleButton IsChecked="{Binding IsEditorOpen, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Height="50" Margin="0,110,0,0">
                     <StackPanel Orientation="Horizontal" Margin="0 0 32 0">
                         <Image Width="32" Height="32" Margin="0 0 10 0" Source="/REghZyAccountManagerV6;component/Resources/editAccountIcon.png"/>
-                        <TextBlock Text="{Binding IsEditorOpen, Converter={StaticResource BoolToStringConverter}, ConverterParameter=Close Editor|Open Editor}" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding IsEditorOpen, Converter={StaticResource BoolToStringConverter}}" VerticalAlignment="Center"/>
                     </StackPanel>
                 </ToggleButton>
                 <Separator Height="1" Margin="0,165,0,0" VerticalAlignment="Top" />
@@ -225,7 +210,7 @@
                     <TextBox VerticalAlignment="Top" Height="29" VerticalContentAlignment="Center"
                              Padding="4 1" BorderThickness="1 1 1 1" Margin="0,0,29,0" 
                              Background="{DynamicResource AREghZyBrush.Primary.1.Background.Static}"
-                             Text="{Binding Input, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
                              x:Name="FindInputBox" utils:HorizontalScrolling.UseHorizontalScrolling="True" 
                              BorderBrush="{DynamicResource AREghZyBrush.Primary.2.Border.Static}"
                              Tag="Search for an account here..."

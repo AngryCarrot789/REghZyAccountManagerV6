@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -135,7 +134,7 @@ namespace REghZyAccountManagerV6.Controls {
         }
 
         public NumberSelector() {
-            InitializeComponent();
+            this.InitializeComponent();
         }
 
         public void Increment() {
@@ -173,19 +172,19 @@ namespace REghZyAccountManagerV6.Controls {
         }
 
         private void INCREMENT_Click(object sender, RoutedEventArgs e) {
-            Increment();
+            this.Increment();
         }
 
         private void DECREMENT_Click(object sender, RoutedEventArgs e) {
-            Decrement();
+            this.Decrement();
         }
 
-        private void NumberBox_MouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
+        private void NumberBox_MouseWheel(object sender, MouseWheelEventArgs e) {
             if (e.Delta > 0.0d) {
-                Increment();
+                this.Increment();
             }
             else if (e.Delta < 0.0d) {
-                Decrement();
+                this.Decrement();
             }
         }
     }

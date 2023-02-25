@@ -1,20 +1,23 @@
 ﻿using System.Windows;
 
-namespace REghZyFramework.Themes {
+namespace REghZyAccountManagerV6.Themes {
     public partial class Controls {
         private void CloseWindow_Event(object sender, RoutedEventArgs e) {
             if (e.Source != null)
-                try { CloseWind(Window.GetWindow((FrameworkElement)e.Source)); }
+                try {
+                    this.CloseWind(Window.GetWindow((FrameworkElement)e.Source)); }
                 catch { }
         }
         private void AutoMinimize_Event(object sender, RoutedEventArgs e) {
             if (e.Source != null)
-                try { MaximizeRestore(Window.GetWindow((FrameworkElement)e.Source)); }
+                try {
+                    this.MaximizeRestore(Window.GetWindow((FrameworkElement)e.Source)); }
                 catch { }
         }
         private void Minimize_Event(object sender, RoutedEventArgs e) {
             if (e.Source != null)
-                try { MinimizeWind(Window.GetWindow((FrameworkElement)e.Source)); }
+                try {
+                    this.MinimizeWind(Window.GetWindow((FrameworkElement)e.Source)); }
                 catch { }
         }
 

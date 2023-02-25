@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.13.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero2" />
     <Reference Include="REghZy.MVVM">
       <HintPath>..\..\REghZy\DLL\REghZy.MVVM.dll</HintPath>
@@ -68,34 +71,25 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Accounting\AccountModel.cs" />
-    <Compile Include="Accounting\AccountViewModel.cs" />
-    <Compile Include="Accounting\Controls\LargeAccountControl.xaml.cs">
-      <DependentUpon>LargeAccountControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Accounting\Controls\SmallAccountControl.xaml.cs">
-      <DependentUpon>SmallAccountControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Accounting\ExtraData.cs" />
-    <Compile Include="Accounting\ExtraInfoViewModel.cs" />
-    <Compile Include="Accounting\IO\AccountIO.cs" />
-    <Compile Include="AttachedProperties\GridSplitterAttachedProperty.cs" />
+    <Compile Include="Accounting\Controls\AccountControl.cs" />
+    <Compile Include="Accounting\CrappyOriginalDatabase.cs" />
+    <Compile Include="Accounting\JsonAccountDatabase.cs" />
+    <Compile Include="Accounting\SingularJsonFileDatabase.cs" />
+    <Compile Include="AttachedProperties\GridLatchSplitter.cs" />
     <Compile Include="AttachedProperties\ListBoxTabSelectNextElement.cs" />
     <Compile Include="AttachedProperties\PasswordAttachedProperty.cs" />
-    <Compile Include="AttachedProperties\SelectAllAttachedProperty.cs" />
     <Compile Include="AttachedProperties\TextHinting.cs" />
-    <Compile Include="Controls\AutoCloseGridSplitter.cs" />
-    <Compile Include="Controls\AutoClosingGridSplitter.cs" />
+    <Compile Include="AttachedProperties\DelayedBindingUpdate.cs" />
     <Compile Include="Controls\DoubleClickEditBox.xaml.cs">
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\EditableTextBlock.cs" />
     <Compile Include="Controls\NumberSelector.xaml.cs">
       <DependentUpon>NumberSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Converters\BoolToStringConverter.cs" />
-    <Compile Include="Converters\ModificationColourConverter.cs" />
-    <Compile Include="Finding\AccountFinderViewModel.cs" />
-    <Compile Include="ServiceLocator.cs" />
+    <Compile Include="Converters\BoolConverter.cs" />
+    <Compile Include="Services\ClipboardService.cs" />
+    <Compile Include="Services\FilePickDialogService.cs" />
     <Compile Include="Themes\Controls.xaml.cs" />
     <Compile Include="Themes\ThemesController.cs" />
     <Compile Include="Themes\ThemeTypes.cs" />
@@ -103,43 +97,41 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utils\FileHelper.cs" />
     <Compile Include="Utils\FolderPicker.cs" />
-    <Compile Include="Utils\LinqTryCatch.cs" />
     <Compile Include="Utils\HorizontalScrolling.cs" />
     <Compile Include="Utils\ReaderUtils.cs" />
-    <Compile Include="ViewModelLocator.cs" />
-    <Compile Include="ViewModels\AccountCollectionViewModel.cs" />
-    <Compile Include="ViewModels\AccountEditorViewModel.cs" />
-    <Compile Include="ViewModels\AccountPanelViewModel.cs" />
-    <Compile Include="ViewModels\ApplicationViewModel.cs" />
-    <Compile Include="Views\IAccountEditor.cs" />
-    <Compile Include="Views\IAccountList.cs" />
-    <Compile Include="Views\IFindView.cs" />
-    <Compile Include="Views\ILoginView.cs" />
-    <Compile Include="Views\INewAccount.cs" />
-    <Compile Include="Views\ISettings.cs" />
-    <Compile Include="Views\IView.cs" />
-    <Compile Include="Views\Login\LoginViewModel.cs" />
-    <Compile Include="Views\Login\LoginWindow.xaml.cs">
-      <DependentUpon>LoginWindow.xaml</DependentUpon>
+    <Compile Include="Views\BaseDialog.cs" />
+    <Compile Include="Views\BaseWindow.cs" />
+    <Compile Include="Views\Dialogs\Login\ILoginDialog.cs" />
+    <Compile Include="Views\Dialogs\Login\LoginDialog.xaml.cs">
+      <DependentUpon>LoginDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Dialogs\Login\LoginViewModel.cs" />
+    <Compile Include="Views\Dialogs\Message\MessageDialogService.cs" />
+    <Compile Include="Views\Dialogs\NewAccount\NewAccountDialog.xaml.cs">
+      <DependentUpon>NewAccountDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\NewAccount\NewAccountDialogService.cs" />
+    <Compile Include="Views\Dialogs\NewAccount\NewAccountViewModel.cs" />
     <Compile Include="Views\MainView\MainViewModel.cs" />
     <Compile Include="Views\MainView\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Views\NewAccounts\NewAccountWindow.xaml.cs">
-      <DependentUpon>NewAccountWindow.xaml</DependentUpon>
+    <Compile Include="Views\Progress\ProgressWindow.xaml.cs">
+      <DependentUpon>ProgressWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Progress\ProgressViewModel.cs" />
+    <Compile Include="Views\Progress\ProgressViewService.cs" />
+    <Compile Include="Views\Settings\ConfigDialogService.cs" />
     <Compile Include="Views\Settings\UserSettingsViewModel.cs" />
-    <Compile Include="Views\Settings\UserSettingsWindow.xaml.cs">
-      <DependentUpon>UserSettingsWindow.xaml</DependentUpon>
+    <Compile Include="Views\Settings\UserSettingsDialog.xaml.cs">
+      <DependentUpon>UserSettingsDialog.xaml</DependentUpon>
     </Compile>
-    <Page Include="Accounting\Controls\LargeAccountControl.xaml" />
+    <Page Include="Accounting\Controls\AccountControlStyles.xaml" />
     <Page Include="Accounting\Controls\SharedControls.xaml" />
-    <Page Include="Accounting\Controls\SmallAccountControl.xaml" />
     <Page Include="Controls\DoubleClickEditBox.xaml" />
+    <Page Include="Controls\EditableTextBlock.xaml" />
     <Page Include="Controls\NumberSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -168,16 +160,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Login\LoginWindow.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Dialogs\Login\LoginDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Dialogs\NewAccount\NewAccountDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainView\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\NewAccounts\NewAccountWindow.xaml" />
-    <Page Include="Views\Settings\UserSettingsWindow.xaml" />
+    <Page Include="Views\Progress\ProgressWindow.xaml" />
+    <Page Include="Views\Settings\UserSettingsDialog.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -197,6 +191,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -204,9 +199,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\addAccountIcon.png" />
@@ -218,6 +210,17 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\preferencesIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\REghZyAccountManagerV6.Core\REghZyAccountManagerV6.Core.csproj">
+      <Project>{59D9C7AB-52A3-4D93-B43B-BD920250622A}</Project>
+      <Name>REghZyAccountManagerV6.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Accounting\IO\" />
+    <Folder Include="Finding\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

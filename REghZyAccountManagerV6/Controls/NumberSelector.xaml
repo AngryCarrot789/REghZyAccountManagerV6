@@ -9,8 +9,8 @@
              BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"
              x:Name="CONTROL">
     <Grid>
-        <TextBox x:Name="NumberBox" Margin="0,0,32,0" 
-                 VerticalContentAlignment="Center" 
+        <TextBox x:Name="NumberBox" Margin="0,0,32,0"
+                 VerticalContentAlignment="Center"
                  Padding="1"
                  Background="Transparent"
                  BorderBrush="{Binding BorderBrush, ElementName=CONTROL}"

@@ -1,0 +1,79 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:accontrols="clr-namespace:REghZyAccountManagerV6.Accounting.Controls"
+                    xmlns:controls="clr-namespace:REghZyAccountManagerV6.Controls"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:acc="clr-namespace:REghZyAccountManagerV6.Accounting"
+                    xmlns:converters="clr-namespace:REghZyAccountManagerV6.Converters"
+                    xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Core.Accounting;assembly=REghZyAccountManagerV6.Core"
+                    mc:Ignorable="d">
+    <converters:BoolToVisibilityConverter x:Key="__VISIBILITY_CONVERTER__" TrueValue="Visible" FalseValue="Collapsed"/>
+    <Style TargetType="accontrols:LargeAccountControl">
+        <Setter Property="MinHeight" Value="65"/>
+        <Setter Property="MaxHeight" Value="65"/>
+        <Setter Property="Height" Value="65"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid d:DataContext="{d:DesignInstance accounting:AccountViewModel}">
+                        <Border Visibility="{Binding HasBeenModified, Converter={StaticResource __VISIBILITY_CONVERTER__}}"
+                                VerticalAlignment="Stretch" Margin="-5,-2,0,-2">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="1,0" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
+                                    <GradientStop Color="#00000000" Offset="1"/>
+                                    <GradientStop>
+                                        <GradientStop.Color>
+                                            <Color A="100" B="40" G="110" R="250"/>
+                                        </GradientStop.Color>
+                                    </GradientStop>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <controls:DoubleClickEditBox Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_ACCNAME}" VerticalAlignment="Top" FontSize="21" FontWeight="Bold" Margin="10,4,370,0"/>
+                        <TextBlock Text="{Binding Email, UpdateSourceTrigger=PropertyChanged, FallbackValue=BINDING_ERROR_EMAIL}" VerticalAlignment="Bottom" FontSize="15" Margin="17,0,368,7"/>
+                        <Grid Margin="0,10,10,10" HorizontalAlignment="Right" Width="354">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="e" Content="Copy Email" Margin="0,0,2,0"/>
+                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="u" Content="Copy Username" Grid.Column="1" Margin="3,0,2,0"/>
+                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="p" Content="Copy Password" Grid.Column="2" Margin="3,0,0,0"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="accontrols:SmallAccountControl">
+        <Setter Property="MinHeight" Value="36"/>
+        <Setter Property="MaxHeight" Value="36"/>
+        <Setter Property="Height" Value="36"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid d:DataContext="{d:DesignInstance accounting:AccountViewModel}">
+                        <Border Visibility="{Binding HasBeenModified, Converter={StaticResource __VISIBILITY_CONVERTER__}}"
+                                VerticalAlignment="Stretch" Margin="-5,-2,0,-2">
+                            <Border.Background>
+                                <LinearGradientBrush EndPoint="1,0" MappingMode="RelativeToBoundingBox" StartPoint="0,0">
+                                    <GradientStop Color="#00000000" Offset="1"/>
+                                    <GradientStop>
+                                        <GradientStop.Color>
+                                            <Color A="100" B="40" G="110" R="250"/>
+                                        </GradientStop.Color>
+                                    </GradientStop>
+                                </LinearGradientBrush>
+                            </Border.Background>
+                        </Border>
+                        <controls:DoubleClickEditBox Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Top" Margin="-5,-2,-5,0" FontSize="14" FontWeight="Bold"/>
+                        <TextBlock Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" FontSize="11" VerticalAlignment="Bottom" Margin="3,0,4,1" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

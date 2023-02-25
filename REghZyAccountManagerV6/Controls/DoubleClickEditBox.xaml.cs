@@ -1,8 +1,9 @@
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using REghZy.MVVM.Commands;
+using System.Windows.Threading;
 
 namespace REghZyAccountManagerV6.Controls {
     public partial class DoubleClickEditBox : UserControl {
@@ -18,11 +19,9 @@ namespace REghZyAccountManagerV6.Controls {
                     false,
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     (d, e) => {
-                        if (e.OldValue == e.NewValue) {
-                            return;
+                        if (e.OldValue != e.NewValue) {
+                            ((DoubleClickEditBox) d).OnIsEditingChanged((bool) e.NewValue);
                         }
-
-                        ((DoubleClickEditBox) d).OnIsEditingChanged((bool)e.OldValue, (bool)e.NewValue);
                     },
                     (obj, value) => value,
                     true,
@@ -48,15 +47,44 @@ namespace REghZyAccountManagerV6.Controls {
                 typeof(DoubleClickEditBox),
                 new PropertyMetadata(TextWrapping.NoWrap));
 
-        private void OnIsEditingChanged(bool oldValue, bool newValue) {
-            if (newValue) {
+        [Category("Appearance")]
+        public bool IsEditing {
+            get => (bool) this.GetValue(IsEditingProperty);
+            set => this.SetValue(IsEditingProperty, value);
+        }
+
+        [Category("Appearance")]
+        public string Text {
+            get => (string) this.GetValue(TextProperty);
+            set => this.SetValue(TextProperty, value);
+        }
+
+        [Category("Appearance")]
+        public TextWrapping TextWrapping {
+            get => (TextWrapping) this.GetValue(TextWrappingProperty);
+            set => this.SetValue(TextWrappingProperty, value);
+        }
+
+        public DoubleClickEditBox() {
+            this.InitializeComponent();
+        }
+
+        private void OnIsEditingChanged(bool isEditing) {
+            if (isEditing) {
                 this.PART_Preview.Visibility = Visibility.Collapsed;
                 this.PART_Editor.Visibility = Visibility.Visible;
                 this.PART_Editor.Focus();
 
-                if (ServiceLocator.Settings.Settings.DoubleClickBoxSelectsAll) {
-                    this.PART_Editor.SelectAll();
-                }
+                // textbox's visual features (RenderScope) only exist after a callback from the rendering engine,
+                // so this code will (hopefully) be executed right after that callback, because DispatcherPriority.Loaded
+                // is right below the render priority (aka processed after rendering)
+                Application.Current.Dispatcher.Invoke(() => {
+                    Point point = Mouse.GetPosition(this.PART_Editor);
+                    int index = this.PART_Editor.GetCharacterIndexFromPoint(point, true);
+                    if (index != -1) {
+                        this.PART_Editor.CaretIndex = index;
+                    }
+                }, DispatcherPriority.Loaded);
 
                 this.preEditText = this.Text;
             }
@@ -65,42 +93,6 @@ namespace REghZyAccountManagerV6.Controls {
                 this.PART_Editor.Visibility = Visibility.Collapsed;
                 this.PART_Preview.Visibility = Visibility.Visible;
             }
-        }
-
-        public bool IsEditing {
-            get => (bool) GetValue(IsEditingProperty);
-            set => SetValue(IsEditingProperty, value);
-        }
-
-        public string Text {
-            get => (string) GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
-        }
-
-        public TextWrapping TextWrapping {
-            get => (TextWrapping) GetValue(TextWrappingProperty);
-            set => SetValue(TextWrappingProperty, value);
-        }
-
-        public ICommand EnableEditing { get; set; }
-
-        public ICommand DisableEditing { get; set; }
-
-        public DoubleClickEditBox() {
-            InitializeComponent();
-            this.EnableEditing = new RelayCommand(()=> {
-                if (this.IsEditing) {
-                    return;
-                }
-
-                this.IsEditing = true;
-            });
-
-            this.DisableEditing = new RelayCommand(()=> {
-                if (this.IsEditing) {
-                    this.IsEditing = false;
-                }
-            });
         }
 
         private void Editor_OnLostFocus(object sender, RoutedEventArgs e) {
@@ -141,10 +133,12 @@ namespace REghZyAccountManagerV6.Controls {
         }
 
         protected override void OnPreviewKeyDown(KeyEventArgs e) {
-            base.OnPreviewKeyDown(e);
             if (e.Key == Key.F2 || (e.Key == Key.R && Keyboard.Modifiers == ModifierKeys.Control)) {
                 this.IsEditing = true;
                 e.Handled = true;
+            }
+            else {
+                base.OnPreviewKeyDown(e);
             }
         }
     }

@@ -1,4 +1,4 @@
-﻿namespace REghZyFramework.Themes {
+﻿namespace REghZyAccountManagerV6.Themes {
     public enum ThemeType {
         Dark,
         Red,
