@@ -2,14 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Threading.Tasks;
-using REghZyAccountManagerV6.Core.Utils;
 
 namespace REghZyAccountManagerV6.Core.Accounting {
-    public class AccountCollectionViewModel : BaseViewModel {
+    public class AccountCollectionViewModel : BaseViewModel, IDisposable {
         private bool ignoreModifications;
         private AccountViewModel selectedAccount;
         private int selectedIndex;
@@ -47,14 +44,56 @@ namespace REghZyAccountManagerV6.Core.Accounting {
 
         public Stack<DeletedAccount> DeletedAccounts { get; }
 
+        private readonly LinkedList<AccountViewModel> accountAppendList;
+        private readonly Task appendTask;
+        private bool isAppendTaskRunning;
+
         public AccountCollectionViewModel() {
             this.Accounts = new ObservableCollection<AccountViewModel>();
             this.Accounts.CollectionChanged += this.Accounts_CollectionChanged;
             this.DeletedAccounts = new Stack<DeletedAccount>();
+            this.accountAppendList = new LinkedList<AccountViewModel>();
+            this.isAppendTaskRunning = true;
+            this.appendTask = Task.Run(async () => {
+                while (this.isAppendTaskRunning) {
+                    lock (this.accountAppendList) {
+                        if (this.accountAppendList.Count > 0) {
+                            AccountViewModel account = this.accountAppendList.First.Value;
+                            this.accountAppendList.RemoveFirst();
+                            IoC.Dispatcher.Invoke(() => {
+                                this.Accounts.Add(account);
+                            });
+                        }
+                    }
+
+                    await Task.Delay(5);
+                }
+            });
         }
 
-        public void AddAccountAsync(AccountViewModel account) {
-            IoC.Dispatcher.Invoke(() => this.AddNewAccount(account, false));
+        public void AppendAccount(AccountViewModel account) {
+            lock (this.accountAppendList) {
+                this.accountAppendList.AddLast(account);
+            }
+        }
+
+        public void AppendAccounts(IEnumerable<AccountViewModel> accounts) {
+            lock (this.accountAppendList) {
+                foreach (AccountViewModel account in accounts) {
+                    this.accountAppendList.AddLast(account);
+                }
+            }
+        }
+
+        public async Task AppendAccountsAsync(IEnumerable<AccountViewModel> accounts) {
+            foreach (AccountViewModel account in accounts) {
+                // this.accountAppendList.AddLast(account);
+                await IoC.Dispatcher.InvokeAsync(() => {
+                    this.Accounts.Add(account);
+                });
+
+                await Task.Delay(5);
+            }
         }
 
         public int CalculateModifiedSize() {
@@ -158,6 +197,12 @@ namespace REghZyAccountManagerV6.Core.Accounting {
             }
         }
 
+        public void AddNewAccounts(IEnumerable<AccountViewModel> accounts) {
+            foreach (AccountViewModel account in accounts) {
+                this.Accounts.Add(account);
+            }
+        }
+
         public void AddNewAccount(AccountViewModel account) {
             this.AddNewAccount(account, true);
         }
@@ -233,6 +278,14 @@ namespace REghZyAccountManagerV6.Core.Accounting {
                 this.findIndex = findIndex;
                 this.historyEdition = historyEdition;
             }
+        }
+
+        public void Dispose() {
+            this.isAppendTaskRunning = false;
+        }
+
+        public bool Exists(string accountName) {
+            return accountName != null && this.Accounts.Any(x => x.AccountName == accountName);
         }
     }
 }

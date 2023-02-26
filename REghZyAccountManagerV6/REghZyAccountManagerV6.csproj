@@ -63,6 +63,7 @@
     <Compile Include="Accounting\CrappyOriginalDatabase.cs" />
     <Compile Include="Accounting\JsonAccountDatabase.cs" />
     <Compile Include="Accounting\SingularJsonFileDatabase.cs" />
+    <Compile Include="AttachedProperties\TextBoxAutoSelect.cs" />
     <Compile Include="AttachedProperties\GridLatchSplitter.cs" />
     <Compile Include="AttachedProperties\ListBoxTabSelectNextElement.cs" />
     <Compile Include="AttachedProperties\PasswordAttachedProperty.cs" />
@@ -72,10 +73,9 @@
       <DependentUpon>DoubleClickEditBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\EditableTextBlock.cs" />
-    <Compile Include="Controls\NumberSelector.xaml.cs">
-      <DependentUpon>NumberSelector.xaml</DependentUpon>
-    </Compile>
+    <Compile Include="Controls\NumberSelector.cs" />
     <Compile Include="Converters\BoolConverter.cs" />
+    <Compile Include="Converters\ToDoubleConverter.cs" />
     <Compile Include="Services\ClipboardService.cs" />
     <Compile Include="Services\FilePickDialogService.cs" />
     <Compile Include="Themes\Controls.xaml.cs" />
@@ -90,6 +90,12 @@
     <Compile Include="Utils\ReaderUtils.cs" />
     <Compile Include="Views\BaseDialog.cs" />
     <Compile Include="Views\BaseWindow.cs" />
+    <Compile Include="Views\BaseWindowCore.cs" />
+    <Compile Include="Views\Dialogs\ErrorInfo\ErrorInfoDialog.xaml.cs">
+      <DependentUpon>ErrorInfoDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Dialogs\ErrorInfo\ErrorInfoDialogService.cs" />
+    <Compile Include="Views\Dialogs\ErrorInfo\ErrorInfoViewModel.cs" />
     <Compile Include="Views\Dialogs\Login\ILoginDialog.cs" />
     <Compile Include="Views\Dialogs\Login\LoginDialog.xaml.cs">
       <DependentUpon>LoginDialog.xaml</DependentUpon>
@@ -116,14 +122,18 @@
     <Compile Include="Views\Settings\UserSettingsDialog.xaml.cs">
       <DependentUpon>UserSettingsDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Validators\AccountNameValidationRule.cs" />
+    <Compile Include="Views\Validators\BaseValidator.cs" />
+    <Compile Include="Views\Validators\IntValidatorRule.cs" />
+    <Compile Include="Views\Validators\DoubleValidatorRule.cs" />
+    <Compile Include="Views\Validators\RangeValidator.cs" />
+    <Compile Include="Views\Validators\SaveDirectoryValidationRule.cs" />
+    <Compile Include="Views\WindowHelper.cs" />
     <Page Include="Accounting\Controls\AccountControlStyles.xaml" />
     <Page Include="Accounting\Controls\SharedControls.xaml" />
+    <Page Include="Controls\ControlStyles.xaml" />
     <Page Include="Controls\DoubleClickEditBox.xaml" />
     <Page Include="Controls\EditableTextBlock.xaml" />
-    <Page Include="Controls\NumberSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Themes\ControlColours.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -148,6 +158,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Dialogs\ErrorInfo\ErrorInfoDialog.xaml" />
     <Page Include="Views\Dialogs\Login\LoginDialog.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -207,8 +218,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Accounting\IO\" />
-    <Folder Include="Finding\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

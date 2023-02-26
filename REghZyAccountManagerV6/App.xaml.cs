@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -12,6 +11,7 @@ using REghZyAccountManagerV6.Core.Accounting;
 using REghZyAccountManagerV6.Core.Config;
 using REghZyAccountManagerV6.Core.Services;
 using REghZyAccountManagerV6.Services;
+using REghZyAccountManagerV6.Views.Dialogs.ErrorInfo;
 using REghZyAccountManagerV6.Views.Dialogs.Login;
 using REghZyAccountManagerV6.Views.Dialogs.Message;
 using REghZyAccountManagerV6.Views.Dialogs.NewAccount;
@@ -60,9 +60,11 @@ namespace REghZyAccountManagerV6 {
             IoC.MessageDialogs = new MessageDialogService();
             IoC.Dispatcher = new DispatcherDelegate(this);
             IoC.Database = new SingularJsonFileDatabase();
+            IoC.ErrorInfo = new ErrorInfoDialogService();
 
             if (!string.IsNullOrEmpty(Environment.UserName) && !Debugger.IsAttached) {
                 LoginDialog window = new LoginDialog();
+                // literally the most insecure way of dealing with an incorrect password
                 if (window.ShowDialog() != true) {
                     this.Shutdown();
                     return;
@@ -95,11 +97,10 @@ namespace REghZyAccountManagerV6 {
                 await IoC.MessageDialogs.ShowMessageAsync("Save file is non-existent", "The account save file does not exist or is invalid. Please select one in \"File > Preferences\", then click the \"File > Load\" button");
             }
             else {
-                ObservableCollection<AccountViewModel> list = ViewModelLocator.AccountCollection.Accounts;
                 IEnumerable<AccountModel> enumerable = IoC.Database.ReadAccounts();
-                foreach (AccountModel model in enumerable.OrderBy(d => d.Position)) {
-                    list.Add(model.ToViewModel());
-                }
+                AccountCollectionViewModel collection = ViewModelLocator.AccountCollection;
+                collection.Accounts.Clear();
+                collection.AddNewAccounts(enumerable.OrderBy(d => d.Position).Select(x => x.ToViewModel()));
             }
         }
 

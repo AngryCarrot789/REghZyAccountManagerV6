@@ -1,4 +1,4 @@
-namespace REghZyAccountManagerV6.Core.Views {
+namespace REghZyAccountManagerV6.Core.Views.ViewModels {
     public abstract class BaseWindowViewModel : BaseViewModel {
         public IWindow Window { get; }
 

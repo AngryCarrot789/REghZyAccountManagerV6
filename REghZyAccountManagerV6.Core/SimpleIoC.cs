@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace REghZyAccountManagerV6.Core {
     public class SimpleIoC {
         private readonly Dictionary<Type, object> services;
+
+        private static bool IsDesigner { get; } = Assembly.GetEntryAssembly() == null;
 
         public SimpleIoC() {
             this.services = new Dictionary<Type, object>();
@@ -25,7 +28,11 @@ namespace REghZyAccountManagerV6.Core {
                 throw new InvalidCastException($"The target service type '{typeof(T)}' is incompatible with actual service type '{(service == null ? "NULL" : service.GetType().Name)}'");
             }
 
+            #if DEBUG
+            return default;
+            #else
             throw new Exception($"No service registered with type: {typeof(T)}");
+            #endif
         }
 
         /// <summary>
@@ -43,7 +50,11 @@ namespace REghZyAccountManagerV6.Core {
                 throw new InvalidCastException($"The target service type '{type}' is incompatible with actual service type '{(service == null ? "NULL" : service.GetType().Name)}'");
             }
 
+            #if DEBUG
+            return default;
+            #else
             throw new Exception($"No service registered with type: {type}");
+            #endif
         }
 
         /// <summary>

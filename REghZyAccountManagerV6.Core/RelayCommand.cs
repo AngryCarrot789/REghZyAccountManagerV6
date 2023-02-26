@@ -39,7 +39,7 @@ namespace REghZyAccountManagerV6.Core {
         /// True if the command can be executed, otherwise false if it cannot be executed
         /// </returns>
         public override bool CanExecute(object parameter) {
-            return this.canExecute == null || this.canExecute();
+            return base.CanExecute(parameter) && (this.canExecute == null || this.canExecute());
         }
 
         /// <summary>

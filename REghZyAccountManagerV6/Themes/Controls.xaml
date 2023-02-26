@@ -531,7 +531,17 @@
         </ControlTemplate.Triggers>
     </ControlTemplate>
 
+    <ControlTemplate x:Key="TextBoxErrorTemplate">
+        <StackPanel>
+            <Border BorderBrush="#FFF01428" BorderThickness="1">
+                <AdornedElementPlaceholder/>
+            </Border>
+            <TextBlock Text="{Binding [0].ErrorContent}" Foreground="Red" Margin="5,0,0,0" />
+        </StackPanel>
+    </ControlTemplate>
+
     <Style x:Key="HintedTextBox" TargetType="{x:Type TextBox}">
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource TextBoxErrorTemplate}" />
         <Setter Property="Background" Value="{DynamicResource TextBox.Static.Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextBox.Static.Border}" />
         <Setter Property="Foreground" Value="{DynamicResource AREghZyBrush.Foreground.Static}" />
@@ -608,6 +618,7 @@
     </Style>
 
     <Style TargetType="{x:Type TextBox}">
+        <Setter Property="Validation.ErrorTemplate" Value="{StaticResource TextBoxErrorTemplate}" />
         <Setter Property="Background" Value="{DynamicResource TextBox.Static.Background}" />
         <Setter Property="BorderBrush" Value="{DynamicResource TextBox.Static.Border}" />
         <Setter Property="Foreground" Value="{DynamicResource AREghZyBrush.Foreground.Static}" />

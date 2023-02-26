@@ -1,8 +1,10 @@
-﻿using REghZyAccountManagerV6.Core;
+﻿using System.Collections.Generic;
+using REghZyAccountManagerV6.Core;
 using REghZyAccountManagerV6.Core.Views.Dialogs;
+using REghZyAccountManagerV6.Core.Views.ViewModels;
 
 namespace REghZyAccountManagerV6.Views.Dialogs.NewAccount {
-    public class NewAccountViewModel : BaseConfirmableDialogViewModel {
+    public class NewAccountViewModel : BaseConfirmableDialogViewModel, IErrorInfoHandler { // : IHasErrorInfo {
         private string accountName;
         private string email;
         private string username;
@@ -78,6 +80,18 @@ namespace REghZyAccountManagerV6.Views.Dialogs.NewAccount {
                 case "4": this.DateOfBirth = clipboard; break;
                 case "5": this.SecurityInfo = clipboard; break;
             }
+        }
+
+        // The dialog should already handle this. And the property doesn't actually
+        // get set when a validation error occurs, so this wouldn't work anyway
+        // public void GetInputErrors(Dictionary<string, string> errors) {
+        //     if (ViewModelLocator.AccountCollection.Exists(this.AccountName)) {
+        //         errors[nameof(this.AccountName)] = "An account with this name already exists";
+        //     }
+        // }
+
+        public void OnErrorsUpdated(Dictionary<string, object> errors) {
+            this.ConfirmCommand.IsEnabled = !errors.ContainsKey(nameof(this.AccountName));
         }
     }
 }

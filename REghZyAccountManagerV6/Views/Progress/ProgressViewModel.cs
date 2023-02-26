@@ -1,5 +1,5 @@
-using REghZyAccountManagerV6.Core.Views;
 using REghZyAccountManagerV6.Core.Views.Dialogs.Progress;
+using REghZyAccountManagerV6.Core.Views.ViewModels;
 
 namespace REghZyAccountManagerV6.Views.Progress {
     public class ProgressViewModel : BaseWindowViewModel {

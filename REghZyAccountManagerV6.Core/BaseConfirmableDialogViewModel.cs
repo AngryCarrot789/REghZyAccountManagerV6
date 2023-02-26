@@ -1,22 +1,62 @@
-using System.Windows.Input;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using REghZyAccountManagerV6.Core.Views.Dialogs;
+using REghZyAccountManagerV6.Core.Views.ViewModels;
 
 namespace REghZyAccountManagerV6.Core {
     public abstract class BaseConfirmableDialogViewModel : BaseDialogViewModel {
-        public ICommand ConfirmCommand { get; }
-        public ICommand CancelCommand { get; }
+        public RelayCommand ConfirmCommand { get; }
+        public RelayCommand CancelCommand { get; }
 
         protected BaseConfirmableDialogViewModel(IDialog dialog) : base(dialog) {
-            this.ConfirmCommand = new RelayCommand(this.ConfirmAction);
-            this.CancelCommand = new RelayCommand(this.CancelAction);
+            this.ConfirmCommand = new RelayCommand(async () => await this.ConfirmAction());
+            this.CancelCommand = new RelayCommand(async () => await this.CancelAction());
         }
 
-        public virtual void ConfirmAction() {
-            this.Dialog.CloseDialog(true);
+        public virtual async Task ConfirmAction() {
+            if (await this.CanConfirm()) {
+                await this.Dialog.CloseDialogAsync(true);
+                await this.OnDialogClosed();
+            }
         }
 
-        public virtual void CancelAction() {
-            this.Dialog.CloseDialog(false);
+        public virtual async Task CancelAction() {
+            if (await this.CanCancel()) {
+                await this.Dialog.CloseDialogAsync(false);
+                await this.OnDialogClosed();
+            }
+        }
+
+        /// <summary>
+        /// Called just before the confirm action is executed, to check if this
+        /// dialog actually can close. If this returns true, the dialog closes
+        /// <para>
+        /// This method can also be used to set some final state in the dialog
+        /// </para>
+        /// </summary>
+        public virtual Task<bool> CanConfirm() {
+            if (this.Dialog is IHasErrorInfo errors && errors.Errors.Count > 0) {
+                // Should a window really be shown? It's probably better just use WPF's
+                // validation templates + adorners and just disable the confirm command
+
+                // await IoC.ErrorInfo.ShowDialogAsync(dictionary.Select(x => new Tuple<string, string>(x.Key, x.Value)));
+                return Task.FromResult(false);
+            }
+
+            return Task.FromResult(true);
+        }
+
+        /// <summary>
+        /// Called just before the cancel action is executed, to check if this
+        /// dialog actually can close. This should never really return anything except true,
+        /// otherwise the user will be unable to close the dialog (except for clicking the X button)
+        /// </summary>
+        public virtual Task<bool> CanCancel() {
+            return Task.FromResult(true);
+        }
+
+        public virtual Task OnDialogClosed() {
+            return Task.CompletedTask;
         }
     }
 }

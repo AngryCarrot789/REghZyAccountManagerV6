@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using REghZyAccountManagerV6.Core.Utils;
 
 namespace REghZyAccountManagerV6.Views.Validators {
-    public class IsNumberValidator : ValidationRule {
+    public class DoubleValidatorRule : ValidationRule {
         public override ValidationResult Validate(object value, CultureInfo cultureInfo) {
             if (value == null) {
                 return new ValidationResult(false, "No value provided");

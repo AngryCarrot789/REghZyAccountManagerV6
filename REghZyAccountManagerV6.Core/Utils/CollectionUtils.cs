@@ -7,5 +7,11 @@ namespace REghZyAccountManagerV6.Core.Utils {
                 destination.Add(value);
             }
         }
+
+        public static void AddAll<K, V>(this IDictionary<K, V> destination, IDictionary<K, V> source) {
+            foreach (KeyValuePair<K, V> value in source) {
+                destination.Add(value);
+            }
+        }
     }
 }

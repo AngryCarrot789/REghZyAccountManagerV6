@@ -38,9 +38,9 @@
                                 <ColumnDefinition Width="1*"/>
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
-                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="e" Content="Copy Email" Margin="0,0,2,0"/>
-                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="u" Content="Copy Username" Grid.Column="1" Margin="3,0,2,0"/>
-                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="p" Content="Copy Password" Grid.Column="2" Margin="3,0,0,0"/>
+                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="1" Content="Copy Email" Margin="0,0,2,0"/>
+                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="2" Content="Copy Username" Grid.Column="1" Margin="3,0,2,0"/>
+                            <Button Command="{Binding CopyToClipboardCommand, Mode=OneTime}" FontSize="13" CommandParameter="3" Content="Copy Password" Grid.Column="2" Margin="3,0,0,0"/>
                         </Grid>
                     </Grid>
                 </ControlTemplate>

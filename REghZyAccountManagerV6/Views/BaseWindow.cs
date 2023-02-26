@@ -1,10 +1,14 @@
-using System.Windows;
+using System.Threading.Tasks;
 using REghZyAccountManagerV6.Core.Views;
 
 namespace REghZyAccountManagerV6.Views {
-    public class BaseWindow : Window, IWindow {
+    public class BaseWindow : BaseWindowCore, IWindow {
         public void CloseWindow() {
-            this.Dispatcher.Invoke(this.Close);
+            this.Close();
+        }
+
+        public async Task CloseWindowAsync() {
+            await this.Dispatcher.InvokeAsync(this.CloseWindow);
         }
     }
 }

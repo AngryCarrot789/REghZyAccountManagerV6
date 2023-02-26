@@ -1,9 +1,8 @@
 using System.Globalization;
 using System.Windows.Controls;
 using REghZyAccountManagerV6.Core;
-using REghZyAccountManagerV6.Views.Validators;
 
-namespace REghZyAccountManagerV6.Views.Dialogs.NewAccount {
+namespace REghZyAccountManagerV6.Views.Validators {
     public class AccountNameValidationRule : BaseValidator<string> {
         public override ValidationResult ValidateValue(string value, CultureInfo culture) {
             if (string.IsNullOrEmpty(value)) {

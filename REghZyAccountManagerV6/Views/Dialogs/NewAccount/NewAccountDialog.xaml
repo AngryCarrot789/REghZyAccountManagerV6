@@ -6,6 +6,8 @@
                   xmlns:accounting="clr-namespace:REghZyAccountManagerV6.Accounting"
                   xmlns:views="clr-namespace:REghZyAccountManagerV6.Views"
                   xmlns:newAccount="clr-namespace:REghZyAccountManagerV6.Views.Dialogs.NewAccount"
+                  xmlns:objectModel="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+                  xmlns:validators="clr-namespace:REghZyAccountManagerV6.Views.Validators"
                   d:DataContext="{d:DesignInstance Type=newAccount:NewAccountViewModel}"
                   mc:Ignorable="d"
                   Title="NewAccountWindow" Height="304" Width="550"
@@ -19,7 +21,15 @@
     <Grid Margin="10">
         <Grid Height="32" VerticalAlignment="Top">
             <Label VerticalContentAlignment="Center" FontSize="14" Content="Account Name" HorizontalAlignment="Left" Width="102" Margin="0,0,0,0"/>
-            <TextBox x:Name="BoxAccountName" FontSize="14" Text="{Binding AccountName, UpdateSourceTrigger=PropertyChanged}" Margin="102,0,60,0" Padding="3 2" VerticalContentAlignment="Center" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"/>
+            <TextBox x:Name="BoxAccountName" FontSize="14" Margin="102,0,60,0" Padding="3 2" VerticalContentAlignment="Center" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+                <TextBox.Text>
+                    <Binding Path="AccountName" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                        <Binding.ValidationRules>
+                            <validators:AccountNameValidationRule/>
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
             <Button Focusable="False" Content="Paste" FontSize="14" Command="{Binding PasteFromClipboardCommand, Mode=OneTime}" CommandParameter="0" BorderThickness="0 1 1 1" HorizontalAlignment="Right" Width="60" Background="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}"/>
         </Grid>
         <Grid Height="32" VerticalAlignment="Top" Margin="0,37,0,0">

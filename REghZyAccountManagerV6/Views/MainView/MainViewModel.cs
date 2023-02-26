@@ -1,22 +1,18 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
-using REghZyAccountManagerV6.Accounting;
 using REghZyAccountManagerV6.Core;
 using REghZyAccountManagerV6.Core.Accounting;
 using REghZyAccountManagerV6.Core.Config;
 using REghZyAccountManagerV6.Core.Views.Dialogs;
 using REghZyAccountManagerV6.Core.Views.Dialogs.Message;
-using REghZyAccountManagerV6.Core.Views.Dialogs.Progress;
 
 namespace REghZyAccountManagerV6.Views.MainView {
-    public class MainViewModel : BaseViewModel {
+    public class MainViewModel : BaseViewModel, IDisposable {
         /// <summary>
         /// The panel, on the left. Responsible for handling adding/removing/searching/etc
         /// </summary>
@@ -52,12 +48,9 @@ namespace REghZyAccountManagerV6.Views.MainView {
             }
 
             try {
-                ObservableCollection<AccountViewModel> list = ViewModelLocator.AccountCollection.Accounts;
                 IEnumerable<AccountModel> enumerable = IoC.Database.ReadAccounts();
-                list.Clear();
-                foreach (AccountModel model in enumerable.OrderBy(d => d.Position)) {
-                    list.Add(model.ToViewModel());
-                }
+                this.Collection.Accounts.Clear();
+                this.Collection.AddNewAccounts(enumerable.OrderBy(d => d.Position).Select(x => x.ToViewModel()));
             }
             catch (Exception e) {
                 Debug.WriteLine(e);
@@ -85,10 +78,9 @@ namespace REghZyAccountManagerV6.Views.MainView {
                 }
             }
 
-            IEnumerable<AccountModel> modified = ViewModelLocator.AccountCollection.AccountModels;
             try {
-                IoC.Database.WriteAccounts(modified);
-                ViewModelLocator.AccountCollection.MarkNoneModified();
+                IoC.Database.WriteAccounts(this.Collection.AccountModels);
+                this.Collection.MarkNoneModified();
             }
             catch (Exception e) {
                 Debug.WriteLine(e);
@@ -109,6 +101,10 @@ namespace REghZyAccountManagerV6.Views.MainView {
 
                 this.Collection.MarkAllModified();
             }
+        }
+
+        public void Dispose() {
+
         }
     }
 }

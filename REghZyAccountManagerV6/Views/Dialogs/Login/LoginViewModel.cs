@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using REghZyAccountManagerV6.Core;
 
 namespace REghZyAccountManagerV6.Views.Dialogs.Login {
@@ -11,12 +12,13 @@ namespace REghZyAccountManagerV6.Views.Dialogs.Login {
             this.PasswordVerifier = passwordVerifier ?? throw new ArgumentNullException(nameof(passwordVerifier));
         }
 
-        public override async void ConfirmAction() {
+        public override async Task<bool> CanConfirm() {
             if (this.PasswordVerifier(this.Dialog.Password)) {
-                base.ConfirmAction();
+                return true;
             }
             else {
                 await IoC.MessageDialogs.ShowMessageAsync("Incorrect password", "You have entered an incorrect password. Try again");
+                return false;
             }
         }
     }

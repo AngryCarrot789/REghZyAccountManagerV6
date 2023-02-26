@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace REghZyAccountManagerV6.Controls {
-    public partial class NumberSelector : UserControl {
+    public class NumberSelector : Control {
         public static readonly DependencyProperty MinimumProperty =
             DependencyProperty.Register(
                 nameof(Minimum),
@@ -69,8 +70,7 @@ namespace REghZyAccountManagerV6.Controls {
                 new FrameworkPropertyMetadata(2, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
         private static void OnValuePropertyChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-            NumberSelector selector = (NumberSelector) d;
-            selector.NumberBox.Text = selector.Value.ToString();
+
         }
 
         private static object OnValueCoerceValueCallback(DependencyObject d, object val) {
@@ -126,8 +126,23 @@ namespace REghZyAccountManagerV6.Controls {
             set => this.SetValue(RoundToProperty, value);
         }
 
+        private TextBox PART_TextBox;
+        private Button PART_IncrementButton;
+        private Button PART_DecrementButton;
+
         public NumberSelector() {
-            this.InitializeComponent();
+
+        }
+
+        public override void OnApplyTemplate() {
+            base.OnApplyTemplate();
+            this.PART_TextBox = this.GetTemplateChild("PART_TextBox") as TextBox ?? throw new Exception("Missing templated part: PART_TextBox");
+            this.PART_IncrementButton = this.GetTemplateChild("PART_IncrementButton") as Button ?? throw new Exception("Missing templated part: PART_IncrementButton");
+            this.PART_DecrementButton = this.GetTemplateChild("PART_DecrementButton") as Button ?? throw new Exception("Missing templated part: PART_DecrementButton");
+
+            this.PART_TextBox.MouseWheel += this.OnMouseWheelScroll;
+            this.PART_IncrementButton.Click += this.OnIncrementClick;
+            this.PART_DecrementButton.Click += this.OnDecrementClick;
         }
 
         public void Increment() {
@@ -164,15 +179,15 @@ namespace REghZyAccountManagerV6.Controls {
             }
         }
 
-        private void INCREMENT_Click(object sender, RoutedEventArgs e) {
+        private void OnIncrementClick(object sender, RoutedEventArgs e) {
             this.Increment();
         }
 
-        private void DECREMENT_Click(object sender, RoutedEventArgs e) {
+        private void OnDecrementClick(object sender, RoutedEventArgs e) {
             this.Decrement();
         }
 
-        private void NumberBox_MouseWheel(object sender, MouseWheelEventArgs e) {
+        private void OnMouseWheelScroll(object sender, MouseWheelEventArgs e) {
             if (e.Delta > 0.0d) {
                 this.Increment();
             }

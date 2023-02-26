@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Windows.Input;
 
 namespace REghZyAccountManagerV6.Core.Accounting {

@@ -9,8 +9,6 @@ using REghZyAccountManagerV6.Core;
 using REghZyAccountManagerV6.Core.Accounting;
 using REghZyAccountManagerV6.Core.Config;
 using REghZyAccountManagerV6.Core.Views;
-using REghZyAccountManagerV6.Core.Views.Dialogs.Message;
-using REghZyAccountManagerV6.Utils;
 
 namespace REghZyAccountManagerV6.Views.MainView {
     /// <summary>
@@ -37,6 +35,11 @@ namespace REghZyAccountManagerV6.Views.MainView {
             IoC.Database.WriteAccounts(modified);
             if (!e.Cancel) {
                 base.OnClosing(e);
+            }
+
+            if (this.DataContext is MainViewModel model) {
+                model.Dispose();
+                this.DataContext = null;
             }
         }
 

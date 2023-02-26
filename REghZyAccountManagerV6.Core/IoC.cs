@@ -1,9 +1,9 @@
 ﻿using System;
-using REghZyAccountManagerV6.Core.Accounting;
 using REghZyAccountManagerV6.Core.Accounting.Storage;
 using REghZyAccountManagerV6.Core.Config;
 using REghZyAccountManagerV6.Core.Services;
 using REghZyAccountManagerV6.Core.Views;
+using REghZyAccountManagerV6.Core.Views.Dialogs;
 using REghZyAccountManagerV6.Core.Views.Dialogs.FilePicking;
 using REghZyAccountManagerV6.Core.Views.Dialogs.Message;
 using REghZyAccountManagerV6.Core.Views.Dialogs.NewAccounts;
@@ -50,6 +50,11 @@ namespace REghZyAccountManagerV6.Core {
 
         public static IConfigDialogService ConfigDialog {
             get => Instance.Provide<IConfigDialogService>();
+            set => Instance.Register(value ?? throw new ArgumentNullException(nameof(value), "Value cannot be null"));
+        }
+
+        public static IErrorInfoDialogService ErrorInfo {
+            get => Instance.Provide<IErrorInfoDialogService>();
             set => Instance.Register(value ?? throw new ArgumentNullException(nameof(value), "Value cannot be null"));
         }
 

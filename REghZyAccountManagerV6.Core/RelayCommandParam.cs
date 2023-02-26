@@ -30,7 +30,7 @@ namespace REghZyAccountManagerV6.Core {
         }
 
         public override bool CanExecute(object parameter) {
-            return this.canExecute == null || ((parameter == null || parameter is T) && this.canExecute((T) parameter));
+            return base.CanExecute(parameter) && (this.canExecute == null || (parameter == null || parameter is T) && this.canExecute((T) parameter));
         }
 
         /// <summary>

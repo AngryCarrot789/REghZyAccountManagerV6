@@ -7,6 +7,15 @@ namespace REghZyAccountManagerV6.Core {
     /// implementation for dealing with the <see cref="CanExecuteChanged"/> event handler
     /// </summary>
     public abstract class BaseRelayCommand : ICommand {
+        private bool isEnabled;
+        public bool IsEnabled {
+            get => this.isEnabled;
+            set {
+                this.isEnabled = value;
+                this.RaiseCanExecuteChanged();
+            }
+        }
+
         /// <summary>
         /// Raised when <see cref="RaiseCanExecuteChanged"/> is called
         /// </summary>
@@ -17,11 +26,10 @@ namespace REghZyAccountManagerV6.Core {
         /// </summary>
         /// <param name="canExecute">The execution status logic</param>
         protected BaseRelayCommand() {
-
+            this.isEnabled = true;
         }
 
         public abstract void Execute(object parameter);
-
 
         /// <summary>
         /// Determines whether this <see cref="BaseRelayCommand"/> can execute in its current state
@@ -32,7 +40,9 @@ namespace REghZyAccountManagerV6.Core {
         /// <returns>
         /// True if the command can be executed, otherwise false if it cannot be executed
         /// </returns>
-        public abstract bool CanExecute(object parameter);
+        public virtual bool CanExecute(object parameter) {
+            return this.IsEnabled;
+        }
 
         /// <summary>
         /// Method used to raise the <see cref="CanExecuteChanged"/> event to indicate that the

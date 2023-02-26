@@ -1,11 +1,15 @@
-using System.Windows;
+using System.Threading.Tasks;
 using REghZyAccountManagerV6.Core.Views.Dialogs;
 
 namespace REghZyAccountManagerV6.Views {
-    public class BaseDialog : Window, IDialog {
+    public class BaseDialog : BaseWindowCore, IDialog {
         public void CloseDialog(bool result) {
             this.DialogResult = result;
-            Application.Current.Dispatcher.Invoke(this.Close);
+            this.Close();
+        }
+
+        public async Task CloseDialogAsync(bool result) {
+            await this.Dispatcher.InvokeAsync(() => this.CloseDialog(result));
         }
     }
 }

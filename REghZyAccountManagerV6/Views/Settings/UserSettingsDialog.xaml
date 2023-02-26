@@ -6,30 +6,44 @@
                   xmlns:controls="clr-namespace:REghZyAccountManagerV6.Controls"
                   xmlns:settings="clr-namespace:REghZyAccountManagerV6.Views.Settings"
                   xmlns:views="clr-namespace:REghZyAccountManagerV6.Views"
+                  xmlns:validators="clr-namespace:REghZyAccountManagerV6.Views.Validators"
                   d:DataContext="{d:DesignInstance Type=settings:UserSettingsViewModel}"
                   mc:Ignorable="d"
                   Title="UserSettingsWindow" Height="450" Width="800"
-                  Style="{DynamicResource CustomWindowStyle}">
+                  Style="{DynamicResource CustomWindowStyle}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}">
     <Grid Margin="10">
         <StackPanel Margin="0,0,0,40">
             <Grid Margin="0 0 0 5">
                 <Label Content="Save Directory"/>
-                <TextBox Text="{Binding SaveDirectory, UpdateSourceTrigger=PropertyChanged}" Padding="4" Margin="100,0,26,0" Background="{DynamicResource AREghZyBrush.Deep.1.Background.Static}"/>
+                <TextBox Padding="4" Margin="100,0,26,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+                    <TextBox.Text>
+                        <Binding Path="SaveDirectory" UpdateSourceTrigger="PropertyChanged" NotifyOnValidationError="True">
+                            <Binding.ValidationRules>
+                                <settings:SaveDirectoryValidationRule/>
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
                 <Button Command="{Binding SelectDirectoryCommand, Mode=OneTime}" Content="..." HorizontalAlignment="Right" Width="26" BorderThickness="0 1 1 1" BorderBrush="{DynamicResource AREghZyBrush.Primary.1.Border.Static}" Background="{DynamicResource AREghZyBrush.Deep.3.Background.Static}"/>
             </Grid>
             <Grid Margin="0 0 0 5">
                 <Label Content="Window Width"/>
-                <controls:NumberSelector Value="{Binding WindowWidth, UpdateSourceTrigger=PropertyChanged}" Minimum="750" Maximum="3840" Margin="100,0,0,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"/>
+                <TextBox VerticalContentAlignment="Center" Padding="2 0" Margin="100,0,0,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+                    <TextBox.Text>
+                        <Binding Path="WindowWidth" UpdateSourceTrigger="PropertyChanged"/>
+                    </TextBox.Text>
+                </TextBox>
             </Grid>
             <Grid Margin="0 0 0 5">
                 <Label Content="Window Height"/>
-                <controls:NumberSelector Value="{Binding WindowHeight, UpdateSourceTrigger=PropertyChanged}" Minimum="525" Maximum="2160" Margin="100,0,0,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"/>
-            </Grid>
-            <Grid Margin="0 0 0 5">
-                <CheckBox Content="Window Height" IsChecked="{Binding DoubleClickBoxSelectsAll, UpdateSourceTrigger=PropertyChanged}" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}"/>
+                <TextBox VerticalContentAlignment="Center" Padding="2 0" Margin="100,0,0,0" Background="{DynamicResource AREghZyBrush.Deep.2.Background.Static}">
+                    <TextBox.Text>
+                        <Binding Path="WindowHeight" UpdateSourceTrigger="PropertyChanged"/>
+                    </TextBox.Text>
+                </TextBox>
             </Grid>
         </StackPanel>
-        <Button Command="{Binding ConfirmCommand, Mode=OneTime}" Content="Apply and Close" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100" Margin="0,0,210,0"/>
-        <Button Command="{Binding CancelCommand, Mode=OneTime}" Content="Cancel" Height="30" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100" Margin="0,0,105,0"/>
+        <Button Command="{Binding ConfirmCommand, Mode=OneTime}" Content="Apply and Close" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="115" Margin="0,0,105,0"/>
+        <Button Command="{Binding CancelCommand, Mode=OneTime}" Content="Cancel" Height="25" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="100"/>
     </Grid>
 </views:BaseDialog>

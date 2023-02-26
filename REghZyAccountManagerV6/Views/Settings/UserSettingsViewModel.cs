@@ -1,13 +1,13 @@
-using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using REghZyAccountManagerV6.Core;
 using REghZyAccountManagerV6.Core.Config;
 using REghZyAccountManagerV6.Core.Views.Dialogs;
+using REghZyAccountManagerV6.Core.Views.ViewModels;
 
 namespace REghZyAccountManagerV6.Views.Settings {
-    public class UserSettingsViewModel : BaseConfirmableDialogViewModel {
+    public class UserSettingsViewModel : BaseConfirmableDialogViewModel, IErrorInfoHandler {
         private string saveDirectory;
         private int windowWidth;
         private int windowHeight;
@@ -58,43 +58,36 @@ namespace REghZyAccountManagerV6.Views.Settings {
             }
         }
 
-        public override async void ConfirmAction() {
-            if (await this.ApplySettings()) {
-                base.ConfirmAction();
+        public override async Task<bool> CanConfirm() {
+            if (await base.CanConfirm()) {
+                if (this.windowWidth < 750) {
+                    if (!await IoC.MessageDialogs.ShowYesNoDialogAsync("Invalid window width", $"The window width is too small ({this.windowWidth} < 750). Do you want to revert back to the previous width?", true)) {
+                        return false;
+                    }
+
+                    this.WindowWidth = this.ModifiedConfiguration.Get(Configuration.MainWindowWidthKey);
+                }
+
+                if (this.windowHeight < 525) {
+                    if (!await IoC.MessageDialogs.ShowYesNoDialogAsync("Invalid window height", $"The window height is too small ({this.windowHeight} < 525). Do you want to revert back to the previous height?", true)) {
+                        return false;
+                    }
+
+                    this.WindowHeight = this.ModifiedConfiguration.Get(Configuration.MainWindowHeightKey);
+                }
+
+                this.ModifiedConfiguration.Set(Configuration.AccountFilePathKey, this.SaveDirectory);
+                this.ModifiedConfiguration.Set(Configuration.MainWindowWidthKey, this.WindowWidth);
+                this.ModifiedConfiguration.Set(Configuration.MainWindowHeightKey, this.WindowHeight);
+                this.ModifiedConfiguration.Set(Configuration.DoubleClickSelectAllTextKey, this.DoubleClickBoxSelectsAll);
+                return true;
             }
+
+            return false;
         }
 
-        public async Task<bool> ApplySettings() {
-            if (string.IsNullOrEmpty(this.SaveDirectory)) {
-                bool revert = await IoC.MessageDialogs.ShowYesNoDialogAsync("No save directory chosen", "You have not chosen a directory to save to. Do you want to revert back to the previous directory?", true);
-                if (!revert) {
-                    return false;
-                }
-
-                this.SaveDirectory = this.ModifiedConfiguration.Get(Configuration.AccountFilePathKey);
-            }
-
-            if (this.windowWidth < 750) {
-                if (!await IoC.MessageDialogs.ShowYesNoDialogAsync("Invalid window width", $"The window width is too small ({this.windowWidth} < 750). Do you want to revert back to the previous width?", true)) {
-                    return false;
-                }
-
-                this.WindowWidth = this.ModifiedConfiguration.Get(Configuration.MainWindowWidthKey);
-            }
-
-            if (this.windowHeight < 525) {
-                if (!await IoC.MessageDialogs.ShowYesNoDialogAsync("Invalid window height", $"The window height is too small ({this.windowHeight} < 525). Do you want to revert back to the previous height?", true)) {
-                    return false;
-                }
-
-                this.WindowHeight = this.ModifiedConfiguration.Get(Configuration.MainWindowHeightKey);
-            }
-
-            this.ModifiedConfiguration.Set(Configuration.AccountFilePathKey, this.SaveDirectory);
-            this.ModifiedConfiguration.Set(Configuration.MainWindowWidthKey, this.WindowWidth);
-            this.ModifiedConfiguration.Set(Configuration.MainWindowHeightKey, this.WindowHeight);
-            this.ModifiedConfiguration.Set(Configuration.DoubleClickSelectAllTextKey, this.DoubleClickBoxSelectsAll);
-            return true;
+        public void OnErrorsUpdated(Dictionary<string, object> errors) {
+            this.ConfirmCommand.IsEnabled = !errors.ContainsKey(nameof(this.SaveDirectory));
         }
     }
 }

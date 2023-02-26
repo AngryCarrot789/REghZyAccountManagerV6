@@ -12,6 +12,7 @@
         xmlns:ctrls="clr-namespace:REghZyAccountManagerV6.Controls"
         xmlns:core="clr-namespace:REghZyAccountManagerV6.Core;assembly=REghZyAccountManagerV6.Core"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:validators="clr-namespace:REghZyAccountManagerV6.Views.Validators"
         mc:Ignorable="d"
         Title="MainWindow" 
         Width="1280" 
@@ -69,7 +70,7 @@
                     <Button BorderThickness="1 0 1 1" Command="{Binding MoveItemToBottom, Mode=OneTime}" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="To Bottom" Margin="160,0,0,0" Width="75" Height="20"/>
                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Center" DataContext="{x:Static core:ViewModelLocator.AccountCollection}" Margin="0,0,0,0">
                         <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding Accounts.Count, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Accounts"/></TextBlock>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding SaveQueueCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" Queued for save"/></TextBlock>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Padding="2" FontSize="13"><Run Text="{Binding SaveQueueCount, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"/><Run Text=" modified"/></TextBlock>
                     </StackPanel>
                     <Slider Value="4" BorderThickness="1 0 1 1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="240,0,0,10" Width="75" Height="20" Style="{DynamicResource AbletonLiveSlider}"/>
                     <TextBlock x:Name="ActivityStatus" Text="" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" FontFamily="Consolas" Margin="315,0,100,0"/>
@@ -83,7 +84,7 @@
                     <Grid x:Name="EditorView" Grid.Column="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,10,0">
                         <Grid DataContext="{Binding SelectedAccount, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
                             <Grid Height="217" VerticalAlignment="Top">
-                                <ctrls:DoubleClickEditBox Text="{Binding AccountName, FallbackValue=BINDING_ERROR_ACCNAME, UpdateSourceTrigger=PropertyChanged}" 
+                                <ctrls:DoubleClickEditBox
                                     HorizontalContentAlignment="Center"
                                     VerticalAlignment="Top" 
                                     VerticalContentAlignment="Center" 
@@ -92,7 +93,15 @@
                                     FontSize="16"
                                     Height="32"
                                     ToolTip="Double click to edit..." 
-                                    FontWeight="Bold"/>
+                                    FontWeight="Bold">
+                                    <ctrls:DoubleClickEditBox.Text>
+                                        <Binding Path="AccountName" FallbackValue="Click 'New Account' to create a new account!" UpdateSourceTrigger="PropertyChanged">
+                                            <Binding.ValidationRules>
+                                                <validators:AccountNameValidationRule/>
+                                            </Binding.ValidationRules>
+                                        </Binding>
+                                    </ctrls:DoubleClickEditBox.Text>
+                                </ctrls:DoubleClickEditBox>
                                 <Grid Margin="0,0,0,148" Height="32" VerticalAlignment="Bottom">
                                     <Label VerticalContentAlignment="Center" FontSize="14" Content="Email" HorizontalAlignment="Left" Width="80"/>
                                     <TextBox utils:HorizontalScrolling.UseHorizontalScrolling="True" FontSize="14" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}" Margin="80,0,60,0" Padding="2" VerticalContentAlignment="Center" ToolTip="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
