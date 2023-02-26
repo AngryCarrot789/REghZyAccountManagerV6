@@ -15,13 +15,6 @@ namespace REghZyAccountManagerV6.Controls {
                     FrameworkPropertyMetadataOptions.BindsTwoWayByDefault,
                     (d, e) => {
                         ((NumberSelector) d).ClampValueToNewMinimum((double) e.NewValue);
-                    },
-                    (d, value) => {
-                        // if ((double) value > ((NumberSelector) d).Maximum) {
-                        //     return ((NumberSelector) d).Maximum;
-                        // }
-
-                        return value;
                     }));
 
         public static readonly DependencyProperty MaximumProperty =
